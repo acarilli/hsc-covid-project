@@ -1,0 +1,102 @@
+---
+title: "Untitled"
+author: "Tony Carilli"
+date: '`r format(lubridate::today(), "%B %d, %Y")`'
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA,
+                      options(digits = 3, scipen = 999))
+library(tidyverse)
+library(gt)
+```
+
+```{r message=FALSE}
+df <-
+  here::here("data", "covid_data_final.csv") %>%
+  read_csv() %>%
+  select(
+    state,
+    median_household_income,
+    percent_adults_with_ba,
+    percent_in_fair_or_poor_health,
+    percent_black,
+    density,
+    percent_rural,
+    percent_65,
+    average_temperature,
+    governor_political_affiliation
+  ) %>% 
+  group_by(state) %>% 
+  distinct(
+    state,
+    median_household_income,
+    percent_adults_with_ba,
+    percent_in_fair_or_poor_health,
+    percent_black,
+    density,
+    percent_rural,
+    percent_65,
+    average_temperature,
+    governor_political_affiliation
+  ) %>% 
+  filter(state != "VI") %>% 
+  ungroup()
+```
+
+```{r}
+df %>% 
+  pivot_longer(-c(state, governor_political_affiliation)) %>% 
+  ggplot(aes(x = value)) + 
+  geom_histogram(bins = 10) + 
+  facet_wrap(~ name, scales = "free_x")
+```
+
+```{r}
+df %>% 
+  select(-c(state, governor_political_affiliation)) %>% 
+  pastecs::stat.desc() %>% 
+  rownames_to_column("stat") %>% 
+  filter(stat %in% c("nbr.val",
+                          "min",
+                          "max",
+                          "mean", 
+                          "median",
+                          "std.dev")) %>% 
+  gt() %>% 
+  tab_header(title = "Descriptive Statistics",
+             subtitle = "Controls") %>% 
+  cols_label(stat = "Statistic", 
+             median_household_income = "Median Household Income",
+             percent_adults_with_ba = "Adults w/ BA (%)",
+             percent_in_fair_or_poor_health = "Fair of Poor Health (%)",
+             percent_black = "Black (%)",
+             density = "Pop Density",
+             percent_rural = "Rural Pop (%)",
+             percent_65 = "Age > 65 (%)",
+             average_temperature = "Average Temperature"
+  ) %>% 
+  cols_align("center") %>% 
+  summary_rows(
+    # groups = TRUE,
+    fns = list(
+      avg = ~mean(., na.rm = TRUE)
+    )
+  )
+```
+
+
+ 
+
+
+```{r}
+df %>% 
+  select(governor_political_affiliation) %>% 
+  summarytools::freq()
+```
+
