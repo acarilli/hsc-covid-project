@@ -7,6 +7,7 @@ output:
     toc: true
     toc_float: true
     df_print: paged
+    keep_md: true
 ---
 
 ```{r setup, include=FALSE}
@@ -81,13 +82,7 @@ df %>%
              percent_65 = "Age > 65 (%)",
              average_temperature = "Average Temperature"
   ) %>% 
-  cols_align("center") %>% 
-  summary_rows(
-    # groups = TRUE,
-    fns = list(
-      avg = ~mean(., na.rm = TRUE)
-    )
-  )
+  cols_align("center") 
 ```
 
 
