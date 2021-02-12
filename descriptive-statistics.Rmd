@@ -87,11 +87,10 @@ df %>%
 
 
  
-
-
 ```{r}
 df %>% 
   select(governor_political_affiliation) %>% 
   summarytools::freq()
 ```
 
+some more changes
