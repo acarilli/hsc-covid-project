@@ -19,7 +19,6 @@ df <- # data
 
 # Introduction
 
-change here
 In light of the on-going COVID-19 pandemic, scholars are beginning to examine the relationship between social capital and the spread and prevention of COVID-19 [@pitas_social_2020; @wong_social_2020; @borgonovi_bowling_2020; @borgonovi_community_2020; @wu_social_2020; @wu_social_2020-1; @durante_civic_2020].[^1] The influence social capital has on health outcomes in general is well-studied [@putnam_bowling_2001], and there is even some recognition that social capital influences the spread of infectious diseases by encouraging the use of vaccinations [@nawa_association_2019; @palanisamy_social_2018] and other behaviors related to influenza [@ronnerstrand_social_2013; @ronnerstrand_social_2014; @chuang_social_2015].
 
 [^1]: [@putnam_bowling_2001: 19] defines social capital as the "connections among individuals---social networks and the norms of reciprocity and trustworthiness that arise from them."
