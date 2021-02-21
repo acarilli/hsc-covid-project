@@ -77,13 +77,10 @@ Finally, we expect an interaction between the values people have regarding preve
 
 Table 1 depicts a way to visualize these conditions. The rows characterize groups by their normative beliefs and attitudes; groups in the top row value prevention while groups in the bottom row do not. The columns characterize groups by the strength of their social capital; groups on the left have stronger social capital while those on the right have weaker social capital.
 
-+----------------------------+----------------------------------------------+---------------------------------------------+
 |                            | Strong Social Capital                        | Weak Social Capital                         |
-+============================+==============================================+=============================================+
+|----------------------------|----------------------------------------------|---------------------------------------------|
 | Prevention is valuable     | I - Social capital lowers prevalence rates   | II - Social capital lowers prevalence rates |
-+----------------------------+----------------------------------------------+---------------------------------------------+
 | Prevention is not valuable | III - Social capital raises prevalence rates | IV - Social capital raises prevalence rates |
-+----------------------------+----------------------------------------------+---------------------------------------------+
 
 : A Framework of Social Capital and Disease Prevention
 
