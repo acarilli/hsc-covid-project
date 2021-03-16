@@ -1,5 +1,5 @@
 ---
-title: ""
+title: "updated models"
 author: "Tony Carilli"
 date: '`r format(lubridate::today(), "%B %d, %Y")`'
 output: 
@@ -20,6 +20,310 @@ library(stargazer)
 df <- # data
   here::here("data", "covid_data_final.csv") %>% 
   read_csv()
+```
+
+```{r table-2, results='asis', message=FALSE}
+model_twoways <- 
+  df %>%
+  plm(
+    cases_new ~ stringency_index_lag * state_level_index +
+      I(stringency_index_lag ^ 2),
+    data = .,
+    effect = "twoways",
+    index = "state",
+    model = "within"
+  )
+
+model_oneway_no_controls <- 
+  df %>%
+  plm(
+    cases_new ~ stringency_index_lag * state_level_index +
+      I(stringency_index_lag ^ 2),
+    data = .,
+    effect = "time",
+    index = "state",
+    model = "within"
+  )
+  
+model_oneway_with_controls <- 
+  df %>%
+  plm(
+    cases_new ~ stringency_index_lag * state_level_index +
+      I(stringency_index_lag ^ 2) +
+      median_household_income +
+      percent_adults_with_ba +
+      percent_in_fair_or_poor_health +
+      percent_black +
+      density +
+      percent_rural +
+      percent_65 +
+      average_temperature +
+      governor_political_affiliation,
+    data = .,
+    effect = "time",
+    index = "state",
+    model = "within"
+  )
+
+stargazer(model_twoways, model_oneway_no_controls, model_oneway_with_controls,
+  # type = "latex",
+  type = "html",
+  df = FALSE,
+  covariate.labels = c(
+    "Stringency Index",
+    "Social Capital Index",
+    "Stringency Index squared",
+    "Median Household Income",
+    "Percent of Adults with Bachelor's Degree",
+    "Percent of Adults in Fair or Poor Health",
+    "Percent of Population that is Black",
+    "Population Density",
+    "Percent of Population in Rural Areas",
+    "Percent of Population greater than 65 years old",
+    "Average Temperature",
+    "Republican Governor",
+    "Stringency Index * Social Capital Index"
+  ),
+  title = "Regression Results",
+  dep.var.labels = "Daily New Cases per Million",
+  header = FALSE
+)
+```
+
+
+```{r table-3, results='asis', message=FALSE}
+model_penn_state <- 
+  df %>%
+  mutate(sc = scp_version_of_penn_state_index) %>% 
+  plm(
+    cases_new ~ stringency_index_lag * sc +
+      I(stringency_index_lag ^ 2),
+    data = .,
+    effect = "twoways",
+    index = "state",
+    model = "within"
+  )
+
+model_putnam <- 
+  df %>%
+  mutate(sc = putnam_index) %>% 
+  plm(
+    cases_new ~ stringency_index_lag * sc +
+      I(stringency_index_lag ^ 2),
+    data = .,
+    effect = "twoways",
+    index = "state",
+    model = "within"
+  )
+
+model_alesina <- 
+  df %>%
+  mutate(sc = alesina_la_ferrara_social_capital_group) %>% 
+  plm(
+    cases_new ~ stringency_index_lag * sc +
+      I(stringency_index_lag ^ 2),
+    data = .,
+    effect = "twoways",
+    index = "state",
+    model = "within"
+  )
+
+stargazer(
+  model_alesina,
+  model_putnam,
+  model_penn_state,
+  type = "html",
+  df = FALSE,
+  header = FALSE,
+  covariate.labels = c(
+    "Stringency Index",
+    "Stringency Index squared",
+    "Stringency Index * Social Capital Index"
+  ),
+  title = "Alternate Social Capital Measures",
+  column.labels = c(
+    "Alesina La Ferrara",
+    "Putnam Index",
+    "Penn State Index"
+  ),
+  dep.var.labels = "Daily New Cases",
+  notes = "Each model estimtate with two-way fixed effects."
+)
+```
+
+```{r table-4, results='asis', message=FALSE}
+model_penn_state_one_way <-
+  df %>%
+  mutate(sc = scp_version_of_penn_state_index) %>%
+  plm(
+    cases_new ~ stringency_index_lag * sc +
+      I(stringency_index_lag ^ 2) +
+      median_household_income +
+      percent_adults_with_ba +
+      percent_in_fair_or_poor_health +
+      percent_black +
+      density +
+      percent_rural +
+      percent_65 +
+      average_temperature +
+      governor_political_affiliation,
+    data = .,
+    effect = "time",
+    index = "state",
+    model = "within"
+  )
+
+model_putnam_one_way <-
+  df %>%
+  mutate(sc = putnam_index) %>%
+  plm(
+    cases_new ~ stringency_index_lag * sc +
+      I(stringency_index_lag ^ 2) +
+      median_household_income +
+      percent_adults_with_ba +
+      percent_in_fair_or_poor_health +
+      percent_black +
+      density +
+      percent_rural +
+      percent_65 +
+      average_temperature +
+      governor_political_affiliation,
+    data = .,
+    effect = "time",
+    index = "state",
+    model = "within"
+  )
+
+model_alesina_one_way <-
+  df %>%
+  mutate(sc = alesina_la_ferrara_social_capital_group) %>%
+  plm(
+    cases_new ~ stringency_index_lag * sc +
+      I(stringency_index_lag ^ 2) +
+      median_household_income +
+      percent_adults_with_ba +
+      percent_in_fair_or_poor_health +
+      percent_black +
+      density +
+      percent_rural +
+      percent_65 +
+      average_temperature +
+      governor_political_affiliation,
+    data = .,
+    effect = "time",
+    index = "state",
+    model = "within"
+  )
+
+stargazer(
+  model_alesina_one_way,
+  model_putnam_one_way,
+  model_penn_state_one_way,
+  type = "html",
+  header = FALSE,
+  df = FALSE,
+  # omit = c(
+  #   "median_household_income",
+  #   "percent_adults_with_ba",
+  #   "percent_in_fair_or_poor_health",
+  #   "percent_black",
+  #   "density",
+  #   "percent_rural",
+  #   "percent_65",
+  #   "average_temperature",
+  #   "governor_political_affiliation"
+  # ),
+  covariate.labels = c(
+    "Stringency Index",
+    "Stringency Index squared",
+    "Social Capital Index",
+    "Stringency Index * Social Capital Index"
+  ),
+  title = "Alternate Social Capital Measures",
+  column.labels = c(
+    "Alesina La Ferrara",
+    "Putnam Index",
+    "Penn State Index"
+  ),
+  order = c(1, 3, 2, 4),
+  dep.var.labels = "Daily New Cases per Million",
+  notes = "One-way fixed effects with controls not reported."
+)
+```
+
+```{r table-5, results='asis', message=FALSE}
+model_oneway_with_controls_pre_july_4 <- 
+  df %>% 
+  filter(date <= "2020-07-04") %>% 
+  plm(
+    cases_new ~ stringency_index_lag * state_level_index +
+      I(stringency_index_lag ^ 2) +
+      median_household_income +
+      percent_adults_with_ba +
+      percent_in_fair_or_poor_health +
+      percent_black +
+      density +
+      percent_rural +
+      percent_65 +
+      average_temperature +
+      governor_political_affiliation,
+    data = .,
+    effect = "time",
+    index = "state",
+    model = "within"
+  )
+  
+  model_oneway_with_controls_post_july_4 <- 
+  df %>% 
+  filter(date > "2020-07-04") %>% 
+  plm(
+    cases_new ~ stringency_index_lag * state_level_index +
+      I(stringency_index_lag ^ 2) +
+      median_household_income +
+      percent_adults_with_ba +
+      percent_in_fair_or_poor_health +
+      percent_black +
+      density +
+      percent_rural +
+      percent_65 +
+      average_temperature +
+      governor_political_affiliation,
+    data = .,
+    effect = "time",
+    index = "state",
+    model = "within"
+  )
+  
+stargazer(
+  model_oneway_with_controls_pre_july_4,
+  model_oneway_with_controls_post_july_4,
+  type = "html",
+  header = FALSE,
+  df = FALSE,
+  # omit = c(
+  #   "median_household_income",
+  #   "percent_adults_with_ba",
+  #   "percent_in_fair_or_poor_health",
+  #   "percent_black",
+  #   "density",
+  #   "percent_rural",
+  #   "percent_65",
+  #   "average_temperature",
+  #   "governor_political_affiliation"
+  # ),
+  covariate.labels = c(
+    "Stringency Index",
+    "Stringency Index squared",
+    "Social Capital Index",
+    "Stringency Index * Social Capital Index"
+  ),
+  order = c(1, 3, 2, 4),
+  title = "Regression Results pre and post July 4",
+  column.labels = c("Mar - July 4",
+                    "July 5 - "),
+  dep.var.labels = "Daily New Cases per Million",
+  notes = "One-way fixed effects with controls not reported."
+) 
 ```
 
 
