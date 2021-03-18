@@ -22,9 +22,12 @@ df <- # data
   read_csv()
 ```
 
-```{r table-2, results='asis', message=FALSE}
-model_twoways <- 
-  df %>%
+# Table 2 Regressions
+
+```{r table-2}
+
+
+df %>%
   plm(
     cases_new ~ stringency_index_lag * state_level_index +
       I(stringency_index_lag ^ 2),
@@ -34,8 +37,8 @@ model_twoways <-
     model = "within"
   )
 
-model_oneway_no_controls <- 
-  df %>%
+
+df %>%
   plm(
     cases_new ~ stringency_index_lag * state_level_index +
       I(stringency_index_lag ^ 2),
@@ -44,9 +47,9 @@ model_oneway_no_controls <-
     index = "state",
     model = "within"
   )
-  
-model_oneway_with_controls <- 
-  df %>%
+
+
+df %>%
   plm(
     cases_new ~ stringency_index_lag * state_level_index +
       I(stringency_index_lag ^ 2) +
@@ -65,31 +68,10 @@ model_oneway_with_controls <-
     model = "within"
   )
 
-stargazer(model_twoways, model_oneway_no_controls, model_oneway_with_controls,
-  # type = "latex",
-  type = "html",
-  df = FALSE,
-  covariate.labels = c(
-    "Stringency Index",
-    "Social Capital Index",
-    "Stringency Index squared",
-    "Median Household Income",
-    "Percent of Adults with Bachelor's Degree",
-    "Percent of Adults in Fair or Poor Health",
-    "Percent of Population that is Black",
-    "Population Density",
-    "Percent of Population in Rural Areas",
-    "Percent of Population greater than 65 years old",
-    "Average Temperature",
-    "Republican Governor",
-    "Stringency Index * Social Capital Index"
-  ),
-  title = "Regression Results",
-  dep.var.labels = "Daily New Cases per Million",
-  header = FALSE
-)
+
 ```
 
+# Table 3 Regressions
 
 ```{r table-3, results='asis', message=FALSE}
 model_penn_state <- 
@@ -150,6 +132,8 @@ stargazer(
   notes = "Each model estimtate with two-way fixed effects."
 )
 ```
+
+# Table 4 Regressions
 
 ```{r table-4, results='asis', message=FALSE}
 model_penn_state_one_way <-
@@ -251,6 +235,8 @@ stargazer(
 )
 ```
 
+# Table 5 Regressions
+
 ```{r table-5, results='asis', message=FALSE}
 model_oneway_with_controls_pre_july_4 <- 
   df %>% 
@@ -325,5 +311,361 @@ stargazer(
   notes = "One-way fixed effects with controls not reported."
 ) 
 ```
+
+# Quarterly Regressions - State-level index - one way
+
+```{r}
+df %>% 
+  filter(date < "2020-06-01") %>% 
+  plm(
+    cases_new ~ stringency_index_lag * state_level_index +
+      I(stringency_index_lag ^ 2) +
+      median_household_income +
+      percent_adults_with_ba +
+      percent_in_fair_or_poor_health +
+      percent_black +
+      density +
+      percent_rural +
+      percent_65 +
+      average_temperature +
+      governor_political_affiliation,
+    data = .,
+    effect = "time",
+    index = "state",
+    model = "within"
+  ) %>% 
+  summary()
+
+df %>% 
+  filter(date >= "2020-06-01", date < "2020-09-01") %>% 
+  plm(
+    cases_new ~ stringency_index_lag * state_level_index +
+      I(stringency_index_lag ^ 2) +
+      median_household_income +
+      percent_adults_with_ba +
+      percent_in_fair_or_poor_health +
+      percent_black +
+      density +
+      percent_rural +
+      percent_65 +
+      average_temperature +
+      governor_political_affiliation,
+    data = .,
+    effect = "time",
+    index = "state",
+    model = "within"
+  ) %>% 
+  summary()
+
+df %>% 
+  filter(date >= "2020-09-01", date < "2020-12-01") %>% 
+  plm(
+    cases_new ~ stringency_index_lag * state_level_index +
+      I(stringency_index_lag ^ 2) +
+      median_household_income +
+      percent_adults_with_ba +
+      percent_in_fair_or_poor_health +
+      percent_black +
+      density +
+      percent_rural +
+      percent_65 +
+      average_temperature +
+      governor_political_affiliation,
+    data = .,
+    effect = "time",
+    index = "state",
+    model = "within"
+  ) %>% 
+  summary()
+
+df %>% 
+  filter(date >= "2020-12-01", date < "2021-03-01") %>% 
+  plm(
+    cases_new ~ stringency_index_lag * state_level_index +
+      I(stringency_index_lag ^ 2) +
+      median_household_income +
+      percent_adults_with_ba +
+      percent_in_fair_or_poor_health +
+      percent_black +
+      density +
+      percent_rural +
+      percent_65 +
+      average_temperature +
+      governor_political_affiliation,
+    data = .,
+    effect = "time",
+    index = "state",
+    model = "within"
+  ) %>% 
+  summary()
+```
+
+# Quarterly Regressions - State-level index - two ways
+
+```{r}
+df %>%
+  filter(date < "2020-06-01") %>% 
+  plm(
+    cases_new ~ stringency_index_lag * state_level_index +
+      I(stringency_index_lag ^ 2),
+    data = .,
+    effect = "twoways",
+    index = "state",
+    model = "within"
+  ) %>% 
+  summary()
+
+df %>%
+  filter(date >= "2020-06-01", date < "2020-09-01") %>% 
+  plm(
+    cases_new ~ stringency_index_lag * state_level_index +
+      I(stringency_index_lag ^ 2),
+    data = .,
+    effect = "twoways",
+    index = "state",
+    model = "within"
+  ) %>% 
+  summary()
+
+df %>%
+  filter(date >= "2020-09-01", date < "2020-12-01") %>% 
+  plm(
+    cases_new ~ stringency_index_lag * state_level_index +
+      I(stringency_index_lag ^ 2),
+    data = .,
+    effect = "twoways",
+    index = "state",
+    model = "within"
+  ) %>% 
+  summary()
+
+df %>%
+  filter(date >= "2020-12-01", date < "2021-03-01") %>% 
+  plm(
+    cases_new ~ stringency_index_lag * state_level_index +
+      I(stringency_index_lag ^ 2),
+    data = .,
+    effect = "twoways",
+    index = "state",
+    model = "within"
+  ) %>% 
+  summary()
+```
+
+
+# Sub-indices regressions
+
+```{r}
+df %>%
+  plm(
+    cases_new ~ stringency_index_lag * family_unity +
+      I(stringency_index_lag ^ 2),
+    data = .,
+    effect = "twoways",
+    index = "state",
+    model = "within"
+  ) %>% 
+  summary()
+
+df %>%
+  plm(
+    cases_new ~ stringency_index_lag * family_interaction +
+      I(stringency_index_lag ^ 2),
+    data = .,
+    effect = "twoways",
+    index = "state",
+    model = "within"
+  ) %>% 
+  summary()
+
+df %>%
+  plm(
+    cases_new ~ stringency_index_lag * social_support +
+      I(stringency_index_lag ^ 2),
+    data = .,
+    effect = "twoways",
+    index = "state",
+    model = "within"
+  ) %>% 
+  summary()
+
+df %>%
+  plm(
+    cases_new ~ stringency_index_lag * community_health +
+      I(stringency_index_lag ^ 2),
+    data = .,
+    effect = "twoways",
+    index = "state",
+    model = "within"
+  ) %>% 
+  summary()
+
+df %>%
+  plm(
+    cases_new ~ stringency_index_lag * institutional_health +
+      I(stringency_index_lag ^ 2),
+    data = .,
+    effect = "twoways",
+    index = "state",
+    model = "within"
+  ) %>% 
+  summary()
+
+df %>%
+  plm(
+    cases_new ~ stringency_index_lag * philanthropic_health +
+      I(stringency_index_lag ^ 2),
+    data = .,
+    effect = "twoways",
+    index = "state",
+    model = "within"
+  ) %>% 
+  summary()
+
+df %>%
+  plm(
+    cases_new ~ stringency_index_lag * average_number_of_close_friends +
+      I(stringency_index_lag ^ 2),
+    data = .,
+    effect = "twoways",
+    index = "state",
+    model = "within"
+  ) %>% 
+  summary()
+
+df %>%
+  plm(
+    cases_new ~ stringency_index_lag * percent_who_trust_all_most_neighbors +
+      I(stringency_index_lag ^ 2),
+    data = .,
+    effect = "twoways",
+    index = "state",
+    model = "within"
+  ) %>% 
+  summary()
+
+df %>%
+  plm(
+    cases_new ~ stringency_index_lag * membership_organizations_p_1_000 +
+      I(stringency_index_lag ^ 2),
+    data = .,
+    effect = "twoways",
+    index = "state",
+    model = "within"
+  ) %>% 
+  summary()
+
+df %>%
+  plm(
+    cases_new ~ stringency_index_lag * non_religious_non_profits_plus_religious_congregations_p_1_000 +
+      I(stringency_index_lag ^ 2),
+    data = .,
+    effect = "twoways",
+    index = "state",
+    model = "within"
+  ) %>% 
+  summary()
+
+df %>%
+  plm(
+    cases_new ~ stringency_index_lag * percent_participated_in_demonstration +
+      I(stringency_index_lag ^ 2),
+    data = .,
+    effect = "twoways",
+    index = "state",
+    model = "within"
+  ) %>% 
+  summary()
+
+df %>%
+  plm(
+    cases_new ~ stringency_index_lag * percent_who_volunteered_for_a_group +
+      I(stringency_index_lag ^ 2),
+    data = .,
+    effect = "twoways",
+    index = "state",
+    model = "within"
+  ) %>% 
+  summary()
+
+df %>%
+  plm(
+    cases_new ~ stringency_index_lag * percent_attended_public_meeting +
+      I(stringency_index_lag ^ 2),
+    data = .,
+    effect = "twoways",
+    index = "state",
+    model = "within"
+  ) %>% 
+  summary()
+
+df %>%
+  plm(
+    cases_new ~ stringency_index_lag * percent_worked_with_neighbors_to_improve_fix_something +
+      I(stringency_index_lag ^ 2),
+    data = .,
+    effect = "twoways",
+    index = "state",
+    model = "within"
+  ) %>% 
+  summary()
+
+df %>%
+  plm(
+    cases_new ~ stringency_index_lag * percent_served_on_committee_or_as_group_officer +
+      I(stringency_index_lag ^ 2),
+    data = .,
+    effect = "twoways",
+    index = "state",
+    model = "within"
+  ) %>% 
+  summary()
+
+df %>%
+  plm(
+    cases_new ~ stringency_index_lag * percent_have_some_great_confidence_in_media +
+      I(stringency_index_lag ^ 2),
+    data = .,
+    effect = "twoways",
+    index = "state",
+    model = "within"
+  ) %>% 
+  summary()
+```
+
+```{r}
+sc_names <-
+  df %>%
+  names() 
+
+soc_cap_measures <- sc_names[c(20:23, 52:70)]  
+  
+```
+
+
+```{r}
+
+models_by_social_capital_measure <- list()
+
+for(i in seq_along(soc_cap_measures)) {
+  
+  # sc_i <- soc_cap_measures[i]
+  
+  models_by_social_capital_measure[[i]] <-
+    plm(
+      cases_new ~ stringency_index_lag * soc_cap_measures[i] +
+        I(stringency_index_lag ^ 2),
+      data = df,
+      effect = "twoways",
+      index = "state",
+      model = "within"
+    ) %>% 
+    summary()
+}
+
+```
+
+
+
 
 
