@@ -648,14 +648,15 @@ soc_cap_measures <- sc_names[c(20:23, 52:70)]
 models_by_social_capital_measure <- list()
 
 for(i in seq_along(soc_cap_measures)) {
-  
+# for(i in 1:1)  {
   # sc_i <- soc_cap_measures[i]
   
   models_by_social_capital_measure[[i]] <-
+    df %>% 
     plm(
-      cases_new ~ stringency_index_lag * soc_cap_measures[i] +
+      cases_new ~ stringency_index_lag * get(soc_cap_measures[i]) +
         I(stringency_index_lag ^ 2),
-      data = df,
+      data = .,
       effect = "twoways",
       index = "state",
       model = "within"
@@ -663,9 +664,14 @@ for(i in seq_along(soc_cap_measures)) {
     summary()
 }
 
+names(models_by_social_capital_measure) <- soc_cap_measures
+
 ```
 
 
+```{r}
+models_by_social_capital_measure
+```
 
 
 
