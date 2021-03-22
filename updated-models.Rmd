@@ -455,7 +455,7 @@ df %>%
 
 # Sub-indices regressions
 
-```{r}
+```{r eval=FALSE}
 df %>%
   plm(
     cases_new ~ stringency_index_lag * family_unity +
@@ -633,6 +633,8 @@ df %>%
   summary()
 ```
 
+# Index and sub-index regressions complete two-way
+
 ```{r}
 sc_names <-
   df %>%
@@ -647,12 +649,12 @@ soc_cap_measures <- sc_names[c(20:23, 52:70)]
 
 models_by_social_capital_measure <- list()
 
-for(i in seq_along(soc_cap_measures)) {
-# for(i in 1:1)  {
+for (i in seq_along(soc_cap_measures)) {
+  # for(i in 1:1)  {
   # sc_i <- soc_cap_measures[i]
   
   models_by_social_capital_measure[[i]] <-
-    df %>% 
+    df %>%
     plm(
       cases_new ~ stringency_index_lag * get(soc_cap_measures[i]) +
         I(stringency_index_lag ^ 2),
@@ -660,7 +662,7 @@ for(i in seq_along(soc_cap_measures)) {
       effect = "twoways",
       index = "state",
       model = "within"
-    ) %>% 
+    ) %>%
     summary()
 }
 
@@ -669,9 +671,85 @@ names(models_by_social_capital_measure) <- soc_cap_measures
 ```
 
 
+# Index and sub-index regressions complete one-way
+
 ```{r}
-models_by_social_capital_measure
+
+models_by_social_capital_measure_one_way <- list()
+
+for (i in seq_along(soc_cap_measures)) {
+  models_by_social_capital_measure_one_way[[i]] <-
+    df %>%
+    plm(
+      cases_new ~ stringency_index_lag * get(soc_cap_measures[i]) +
+        I(stringency_index_lag ^ 2) +
+        median_household_income +
+        percent_adults_with_ba +
+        percent_in_fair_or_poor_health +
+        percent_black +
+        density +
+        percent_rural +
+        percent_65 +
+        average_temperature +
+        governor_political_affiliation,
+      data = .,
+      effect = "time",
+      index = "state",
+      model = "within"
+    ) %>% 
+    summary()
+}
+
+names(models_by_social_capital_measure_one_way) <- soc_cap_measures
+
+```
+
+```{r}
+models_by_social_capital_measure_one_way
 ```
 
 
+
+# Index and sub-index quarterly regressions complete two-way
+
+```{r}
+
+q_dates <- tribble(
+  ~begin, ~end,
+  "2020-03-01", "2020-06-01",
+  "2020-06-01", "2020-09-01",
+  "2020-09-01", "2020-12-01",
+  "2020-12-01", "2021-03-01"
+)
+
+models_by_quarter <- list()
+models_by_social_capital <- list()
+
+for(i in 1:nrow(q_dates)) {
+  for (j in seq_along(soc_cap_measures)) {
+  models_by_quarter[[i]] <- 
+    models_by_social_capital[[j]] <-
+      df %>%
+      filter(date >= q_dates[[1]][i], date < q_dates[[2]][i]) %>%
+      plm(
+        cases_new ~ stringency_index_lag * get(soc_cap_measures[j]) +
+          I(stringency_index_lag ^ 2),
+        data = .,
+        effect = "twoways",
+        index = "state",
+        model = "within"
+      ) %>%
+      summary()
+    
+  }
+  
+  
+}
+
+
+```
+
+```{r}
+models_by_social_capital[23]
+```
 
