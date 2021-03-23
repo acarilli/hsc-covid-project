@@ -726,9 +726,9 @@ models_by_quarter <- list()
 models_by_social_capital <- list()
 
 for(i in 1:nrow(q_dates)) {
+  models_by_quarter[[length(models_by_quarter) + 1]] <- 
   for (j in seq_along(soc_cap_measures)) {
-  models_by_quarter[[i]] <- 
-    models_by_social_capital[[j]] <-
+    c(models_by_social_capital[[j]] <- 
       df %>%
       filter(date >= q_dates[[1]][i], date < q_dates[[2]][i]) %>%
       plm(
@@ -740,6 +740,7 @@ for(i in 1:nrow(q_dates)) {
         model = "within"
       ) %>%
       summary()
+    )
     
   }
   
@@ -750,6 +751,25 @@ for(i in 1:nrow(q_dates)) {
 ```
 
 ```{r}
-models_by_social_capital[23]
+models_by_social_capital[1]
+models_by_quarter[1]
+```
+
+```{r}
+
+df %>%
+  mutate(quarter =
+           as_factor(
+             case_when(
+               date >= "2020-03-10" & date < "2020-06-01" ~ "q1",
+               date >= "2020-06-01" & date < "2020-09-01" ~ "q2",
+               date >= "2020-09-01" & date < "2020-12-01" ~ "q3",
+               date >= "2020-12-01" & date < "2021-03-01" ~ "q4"
+             )
+           ))
+  
+  
+  
+
 ```
 
