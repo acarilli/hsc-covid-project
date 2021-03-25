@@ -761,6 +761,7 @@ df %>%
   mutate(quarter =
            as_factor(
              case_when(
+               date >= "2020-03-10" & date < "2020-03-01" ~ "all",
                date >= "2020-03-10" & date < "2020-06-01" ~ "q1",
                date >= "2020-06-01" & date < "2020-09-01" ~ "q2",
                date >= "2020-09-01" & date < "2020-12-01" ~ "q3",
@@ -771,5 +772,40 @@ df %>%
   
   
 
+```
+
+```{r}
+df_by_index_quarter <-
+  df %>%
+  mutate(quarter =
+           as_factor(
+             case_when(
+               date >= "2020-03-10" & date < "2020-06-01" ~ "q1",
+               date >= "2020-06-01" & date < "2020-09-01" ~ "q2",
+               date >= "2020-09-01" & date < "2020-12-01" ~ "q3",
+               date >= "2020-12-01" & date < "2021-03-01" ~ "q4"
+               )
+           )) %>%
+  select(-contains("dummy")) %>% 
+  pivot_longer(soc_cap_measures,
+               names_to = "social_k_name",
+               values_to = "social_k_index") %>%
+  group_by(quarter) %>%
+  nest() 
+  
+```
+
+
+```{r}
+
+df_by_index_quarter 
+
+df_by_index_quarter$data[1] %>% 
+  glimpse()
+```
+
+
+```{r}
+index_model <- 
 ```
 
