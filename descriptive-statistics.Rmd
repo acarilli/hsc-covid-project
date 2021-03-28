@@ -75,7 +75,7 @@ df %>%
   cols_label(stat = "Statistic", 
              median_household_income = "Median Household Income",
              percent_adults_with_ba = "Adults w/ BA (%)",
-             percent_in_fair_or_poor_health = "Fair of Poor Health (%)",
+             percent_in_fair_or_poor_health = "Fair or Poor Health (%)",
              percent_black = "Black (%)",
              density = "Pop Density",
              percent_rural = "Rural Pop (%)",
