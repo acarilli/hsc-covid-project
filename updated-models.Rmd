@@ -806,6 +806,6 @@ df_by_index_quarter$data[1] %>%
 
 
 ```{r}
-index_model <- 
+# index_model <- 
 ```
 
