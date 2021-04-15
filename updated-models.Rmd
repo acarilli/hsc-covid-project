@@ -314,7 +314,7 @@ stargazer(
 
 # Quarterly Regressions - State-level index - one way
 
-```{r eval=false}
+```{r eval=FALSE}
 df %>% 
   filter(date < "2020-06-01") %>% 
   plm(
@@ -634,7 +634,7 @@ df %>%
 
 # Index and sub-index regressions complete two-way
 
-```{r}
+```{r sc-names}
 sc_names <-
   df %>%
   names() 
@@ -643,7 +643,7 @@ soc_cap_measures <- sc_names[c(20:23, 52:70)]
   
 ```
 
-```{r}
+```{r two-way-complete}
 
 models_by_social_capital_measure <- list()
 
@@ -670,7 +670,7 @@ names(models_by_social_capital_measure) <- soc_cap_measures
 
 # Index and sub-index regressions complete one-way
 
-```{r}
+```{r one-way-complete}
 
 models_by_social_capital_measure_one_way <- list()
 
@@ -701,13 +701,13 @@ names(models_by_social_capital_measure_one_way) <- soc_cap_measures
 
 ```
 
-```{r}
+```{r eval=FALSE}
 models_by_social_capital_measure_one_way
 ```
 
 # Index and sub-index quarterly regressions complete two-way
 
-```{r}
+```{r two-way-q1}
 
 models_by_social_capital_measure_q1 <- list()
 
@@ -733,7 +733,7 @@ names(models_by_social_capital_measure_q1) <- soc_cap_measures
 
 ```
 
-```{r}
+```{r two-way-q2}
 models_by_social_capital_measure_q2 <- list()
 
 for (i in seq_along(soc_cap_measures)) {
@@ -757,7 +757,7 @@ for (i in seq_along(soc_cap_measures)) {
 names(models_by_social_capital_measure_q2) <- soc_cap_measures
 ```
 
-```{r}
+```{r two-way-q3}
 models_by_social_capital_measure_q3 <- list()
 
 for (i in seq_along(soc_cap_measures)) {
@@ -781,7 +781,7 @@ for (i in seq_along(soc_cap_measures)) {
 names(models_by_social_capital_measure_q3) <- soc_cap_measures
 ```
 
-```{r}
+```{r two-way-q4}
 models_by_social_capital_measure_q4 <- list()
 
 for (i in seq_along(soc_cap_measures)) {
@@ -805,9 +805,9 @@ for (i in seq_along(soc_cap_measures)) {
 names(models_by_social_capital_measure_q4) <- soc_cap_measures
 ```
 
-# \# Index and sub-index quarterly regressions complete one-way
+# Index and sub-index quarterly regressions complete one-way
 
-```{r}
+```{r one-way-q1-thru-q4}
 models_by_social_capital_measure_one_way_q1 <- list()
 
 for (i in seq_along(soc_cap_measures)) {
@@ -1024,7 +1024,7 @@ df_by_index_quarter$data[1] %>%
 
 Coefficients for two-way models. In order stringency_index_lag, stringency_index_lag^2^ , stringency_index_lag \* social_capital_index
 
-```{r}
+```{r two-way-all-results}
 models_by_social_capital_measure %>% 
   map("coefficients") %>% 
   map(`[`, 1:3) 
@@ -1034,7 +1034,7 @@ models_by_social_capital_measure %>%
 
 ### first quarter March 2020 - May 2020
 
-```{r}
+```{r two-way-q1-results}
 models_by_social_capital_measure_one_way_q1 %>% 
   map("coefficients") %>% 
   map(`[`, 1:3)
@@ -1042,7 +1042,7 @@ models_by_social_capital_measure_one_way_q1 %>%
 
 ### second quarter June 2020 - Aug 2020
 
-```{r}
+```{r two-way-q2-results}
 models_by_social_capital_measure_one_way_q2 %>% 
   map("coefficients") %>% 
   map(`[`, 1:3)
@@ -1050,7 +1050,7 @@ models_by_social_capital_measure_one_way_q2 %>%
 
 ### third quarter Sep 2020 - Nov 2020
 
-```{r}
+```{r two-way-q3-results}
 models_by_social_capital_measure_one_way_q3 %>% 
   map("coefficients") %>% 
   map(`[`, 1:3)
@@ -1058,7 +1058,7 @@ models_by_social_capital_measure_one_way_q3 %>%
 
 ### 4th quarter
 
-```{r}
+```{r two-way-q4-results}
 models_by_social_capital_measure_one_way_q4 %>% 
   map("coefficients") %>% 
   map(`[`, 1:3)
@@ -1082,7 +1082,7 @@ Coefficients for
   - governor_political_affiliation
   
 
-```{r}
+```{r one-way-results-all}
 models_by_social_capital_measure_one_way %>% 
   map(coefficients) %>% 
   map(`[`, 1:13)
@@ -1092,7 +1092,7 @@ models_by_social_capital_measure_one_way %>%
 
 ### Mar 2020 - May 2020
 
-```{r}
+```{r one-way-q1-results}
 models_by_social_capital_measure_one_way_q1 %>% 
   map(coefficients) %>% 
   map(`[`, 1:13)
@@ -1100,7 +1100,7 @@ models_by_social_capital_measure_one_way_q1 %>%
 
 ### Jun 2020 - Aug 2020
 
-```{r}
+```{r one-way-q2-results}
 models_by_social_capital_measure_one_way_q2 %>% 
   map(coefficients) %>% 
   map(`[`, 1:13)
@@ -1108,7 +1108,7 @@ models_by_social_capital_measure_one_way_q2 %>%
 
 ### Sep 2020 - Nov 2020
 
-```{r}
+```{r one-way-q3-results}
 models_by_social_capital_measure_one_way_q3 %>% 
   map(coefficients) %>% 
   map(`[`, 1:13)
@@ -1116,7 +1116,7 @@ models_by_social_capital_measure_one_way_q3 %>%
 
 ### Dec 2020 - Mar 2021
 
-```{r}
+```{r one-way-q4-results}
 models_by_social_capital_measure_one_way_q4 %>% 
   map(coefficients) %>% 
   map(`[`, 1:13)
