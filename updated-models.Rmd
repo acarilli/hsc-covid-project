@@ -24,7 +24,7 @@ df <- # data
 
 # Table 2 Regressions
 
-```{r table-2}
+```{r table-2, eval = FALSE}
 
 
 df %>%
@@ -73,7 +73,7 @@ df %>%
 
 # Table 3 Regressions
 
-```{r table-3, results='asis', message=FALSE}
+```{r table-3, results='asis', message=FALSE, eval = FALSE}
 model_penn_state <- 
   df %>%
   mutate(sc = scp_version_of_penn_state_index) %>% 
@@ -135,7 +135,7 @@ stargazer(
 
 # Table 4 Regressions
 
-```{r table-4, results='asis', message=FALSE}
+```{r table-4, results='asis', message=FALSE, eval = FALSE}
 model_penn_state_one_way <-
   df %>%
   mutate(sc = scp_version_of_penn_state_index) %>%
@@ -237,7 +237,7 @@ stargazer(
 
 # Table 5 Regressions
 
-```{r table-5, results='asis', message=FALSE}
+```{r table-5, results='asis', message=FALSE, eval = FALSE}
 model_oneway_with_controls_pre_july_4 <- 
   df %>% 
   filter(date <= "2020-07-04") %>% 
@@ -314,7 +314,7 @@ stargazer(
 
 # Quarterly Regressions - State-level index - one way
 
-```{r}
+```{r eval=false}
 df %>% 
   filter(date < "2020-06-01") %>% 
   plm(
@@ -402,7 +402,7 @@ df %>%
 
 # Quarterly Regressions - State-level index - two ways
 
-```{r}
+```{r eval=FALSE}
 df %>%
   filter(date < "2020-06-01") %>% 
   plm(
