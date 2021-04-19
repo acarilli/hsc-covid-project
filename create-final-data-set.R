@@ -130,12 +130,12 @@ governors <-
 # Join data to create covid_data_final.csv
 
 OxCGRT %>% 
-  left_join(mobility, by = c("date", "state")) %>% 
+  # left_join(mobility, by = c("date", "state")) %>% 
   left_join(governors, by = "state") %>% 
   left_join(state_benchmarks, by = "state") %>% 
   left_join(state_index, by = "state") %>% 
   left_join(state_index_indicators, by = "state") %>% 
-  left_join(ltc, by = "state") %>% 
+  # left_join(ltc, by = "state") %>% 
   mutate(
     stringency_dummy = ifelse(stringency_index > 50, 1, 0),
     state_level_dummy = ifelse(state_level_index > 0, 1, 0),
