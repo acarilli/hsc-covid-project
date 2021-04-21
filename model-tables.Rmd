@@ -89,3 +89,96 @@ stargazer(
 
 ```
 
+# Test for instruments
+
+```{r iv-test, results='asis'}
+
+stargazer(
+  df %>%
+    lm(
+      state_level_index ~
+        median_household_income +
+        percent_adults_with_ba +
+        percent_in_fair_or_poor_health +
+        percent_black +
+        density +
+        percent_rural +
+        percent_65 +
+        average_temperature +
+        governor_political_affiliation,
+      data = .
+    ),
+  type = "html"
+)
+  
+
+```
+
+# Panel IV
+
+```{r panel-iv}
+ df %>%
+    plm(
+      cases_new ~ stringency_index_lag * state_level_index +
+        I(stringency_index_lag ^ 2) |
+        median_household_income +
+        percent_adults_with_ba +
+        percent_in_fair_or_poor_health +
+        percent_black +
+        density +
+        percent_rural +
+        percent_65 +
+        average_temperature +
+        governor_political_affiliation,
+      data = .,
+      effect = "time",
+      index = "state",
+      model = "within"
+    ) %>% 
+  summary()
+```
+
+# ANVOA
+
+```{r anova}
+one_way <- 
+df %>%
+  plm(
+    cases_new ~ stringency_index_lag * state_level_index - state_level_index +
+      I(stringency_index_lag ^ 2) +
+      median_household_income +
+      percent_adults_with_ba +
+      percent_in_fair_or_poor_health +
+      percent_black +
+      density +
+      percent_rural +
+      percent_65 +
+      average_temperature +
+      governor_political_affiliation,
+    data = .,
+    effect = "time",
+    index = "state",
+    model = "within"
+  ) 
+
+two_way <- 
+df %>% 
+    plm(
+      cases_new ~ stringency_index_lag * state_level_index + 
+        I(stringency_index_lag^2),
+      data = .,
+      effect = "twoways",
+      index = "state",
+      method = "withing"
+    )
+
+sum(one_way$residuals^2)
+sum(two_way$residuals^2)
+
+# Calculate F-stat for restrictions. 
+((sum(one_way$residuals^2) - sum(two_way$residuals^2))/ 9) / (sum(one_way$residuals^2)/one_way$df.residual)
+
+
+
+```
+
