@@ -99,16 +99,16 @@ stargazer(
       state_level_index ~
         median_household_income +
         percent_adults_with_ba +
-        percent_in_fair_or_poor_health +
+        # percent_in_fair_or_poor_health +
         percent_black +
         density +
         percent_rural +
-        percent_65 +
-        average_temperature +
-        governor_political_affiliation,
+        percent_65,
+        # average_temperature +
+        # governor_political_affiliation,
       data = .
     ),
-  type = "html"
+  type = "text"
 )
   
 
@@ -119,17 +119,14 @@ stargazer(
 ```{r panel-iv}
  df %>%
     plm(
-      cases_new ~ stringency_index_lag * state_level_index +
-        I(stringency_index_lag ^ 2) |
+      cases_new ~ stringency_index_lag * state_level_index  +
+        I(stringency_index_lag ^ 2) | 
         median_household_income +
         percent_adults_with_ba +
-        percent_in_fair_or_poor_health +
         percent_black +
         density +
         percent_rural +
-        percent_65 +
-        average_temperature +
-        governor_political_affiliation,
+        percent_65,
       data = .,
       effect = "time",
       index = "state",
@@ -169,16 +166,19 @@ df %>%
       data = .,
       effect = "twoways",
       index = "state",
-      method = "withing"
+      method = "within"
     )
 
 sum(one_way$residuals^2)
 sum(two_way$residuals^2)
 
 # Calculate F-stat for restrictions. 
-((sum(one_way$residuals^2) - sum(two_way$residuals^2))/ 9) / (sum(one_way$residuals^2)/one_way$df.residual)
+((sum(one_way$residuals^2) - sum(two_way$residuals^2))/ 9) / (sum(two_way$residuals^2)/two_way$df.residual)
 
 
 
+```
+```{r}
+pwtest(one_way)
 ```
 
