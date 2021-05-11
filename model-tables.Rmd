@@ -113,7 +113,7 @@ stargazer(
         # governor_political_affiliation,
       data = .
     ),
-  type = "text"
+  type = "html"
 )
   
 
