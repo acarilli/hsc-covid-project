@@ -262,3 +262,42 @@ df %>%
   cor()
   
 ```
+# Index and sub-index regressions complete one-way
+
+```{r one-way-complete}
+
+models_by_social_capital_measure_one_way <- list()
+
+for (i in seq_along(soc_cap_measures)) {
+  models_by_social_capital_measure_one_way[[i]] <-
+    df %>%
+    plm(
+      cases_new ~ stringency_index_lag * get(soc_cap_measures[i]) +
+        I(stringency_index_lag ^ 2) +
+        average_temperature +
+        governor_political_affiliation + 
+        percent_in_fair_or_poor_health |
+        median_household_income +
+        percent_adults_with_ba +
+        percent_black +
+        density +
+        percent_rural +
+        percent_65 +
+        average_temperature +
+        governor_political_affiliation + 
+        percent_in_fair_or_poor_health +
+        stringency_index_lag +
+        I(stringency_index_lag)^2,
+      data = .,
+      effect = "time",
+      index = "state",
+      model = "within"
+    ) %>% 
+    summary()
+}
+
+names(models_by_social_capital_measure_one_way) <- soc_cap_measures
+
+
+models_by_social_capital_measure_one_way
+```
