@@ -181,3 +181,31 @@ sum(two_way$residuals^2)
 
 ```
 
+
+# Index and sub-index regressions complete two-way
+
+```{r two-way-complete}
+
+models_by_social_capital_measure <- list()
+
+for (i in seq_along(soc_cap_measures)) {
+  # for(i in 1:1)  {
+  # sc_i <- soc_cap_measures[i]
+  
+  models_by_social_capital_measure[[i]] <-
+    df %>%
+    plm(
+      cases_new ~ stringency_index_lag * get(soc_cap_measures[i]) +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "twoways",
+      index = "state",
+      model = "within"
+    ) 
+}
+
+names(models_by_social_capital_measure) <- soc_cap_measures
+
+
+stargazer(models_by_social_capital_measure, type = "html")
+```
