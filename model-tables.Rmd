@@ -31,23 +31,7 @@ soc_cap_measures <- sc_names[c(14:17, 46:64)]
 
 ```{r table-1, results='asis'}
 stargazer(
-  df %>%
-    lm(
-      cases_new ~ stringency_index_lag * state_level_index +
-        I(stringency_index_lag ^ 2) +
-        median_household_income +
-        percent_adults_with_ba +
-        percent_in_fair_or_poor_health +
-        percent_black +
-        density +
-        percent_rural +
-        percent_65 +
-        average_temperature +
-        governor_political_affiliation,
-      data = .
-    ),
-  
-  df %>%
+   df %>%
     plm(
       cases_new ~ stringency_index_lag * state_level_index +
         I(stringency_index_lag ^ 2),
@@ -84,7 +68,28 @@ stargazer(
       index = "state",
       method = "withing"
     ),
-  type = "html"
+  df %>%
+    plm(
+      cases_new ~ stringency_index_lag * state_level_index  +
+        I(stringency_index_lag ^ 2) +
+        average_temperature +
+        governor_political_affiliation + 
+        percent_in_fair_or_poor_health |
+        median_household_income +
+        percent_adults_with_ba +
+        percent_black +
+        density +
+        percent_rural +
+        percent_65 +
+        average_temperature +
+        governor_political_affiliation + 
+        percent_in_fair_or_poor_health,
+      data = .,
+      effect = "time",
+      index = "state",
+      model = "within"
+    ),
+    type = "html"
 )
 
 ```
@@ -116,17 +121,23 @@ stargazer(
 
 # Panel IV
 
-```{r panel-iv}
+```{r panel-iv, eval=FALSE}
  df %>%
     plm(
       cases_new ~ stringency_index_lag * state_level_index  +
-        I(stringency_index_lag ^ 2) | 
+        I(stringency_index_lag ^ 2) +
+        average_temperature +
+        governor_political_affiliation + 
+        percent_in_fair_or_poor_health |
         median_household_income +
         percent_adults_with_ba +
         percent_black +
         density +
         percent_rural +
-        percent_65,
+        percent_65 +
+        average_temperature +
+        governor_political_affiliation + 
+        percent_in_fair_or_poor_health,
       data = .,
       effect = "time",
       index = "state",
@@ -137,7 +148,7 @@ stargazer(
 
 # ANVOA
 
-```{r anova}
+```{r anova, eval=FALSE}
 one_way <- 
 df %>%
   plm(
