@@ -74,7 +74,8 @@ stargazer(
         percent_65 +
         average_temperature +
         governor_political_affiliation + 
-        percent_in_fair_or_poor_health,
+        percent_in_fair_or_poor_health +
+        stringency_index_lag,
       data = .,
       effect = "time",
       index = "state",
@@ -209,3 +210,63 @@ names(models_by_social_capital_measure) <- soc_cap_measures
 
 stargazer(models_by_social_capital_measure, type = "html")
 ```
+
+```{r}
+pFtest(
+
+df %>% 
+    plm(
+      cases_new ~ stringency_index_lag * state_level_index + 
+        I(stringency_index_lag^2),
+      data = .,
+      effect = "twoways",
+      index = "state",
+      method = "within"
+    ),
+df %>%
+  plm(
+    cases_new ~ stringency_index_lag * state_level_index - state_level_index +
+      I(stringency_index_lag ^ 2),
+    data = .,
+    effect = "time",
+    index = "state",
+    model = "within"
+  )
+)
+```
+
+```{r eval=FALSE}
+pooltest(cases_new ~ stringency_index_lag * state_level_index + 
+        I(stringency_index_lag^2),
+      data = df,
+      # effect = "twoways",
+      # index = "state",
+      method = "within")
+```
+
+```{r eval=FALSE}
+df %>%
+    plm(
+      cases_new ~ stringency_index_lag * state_level_index  +
+        I(stringency_index_lag ^ 2) +
+        average_temperature +
+        governor_political_affiliation + 
+        percent_in_fair_or_poor_health |
+        median_household_income +
+        percent_adults_with_ba +
+        percent_black +
+        density +
+        percent_rural +
+        percent_65 +
+        average_temperature +
+        governor_political_affiliation + 
+        percent_in_fair_or_poor_health +
+        stringency_index_lag,
+      data = .,
+      effect = "time",
+      index = "state",
+      model = "within"
+    )%>% 
+  summary()
+```
+
