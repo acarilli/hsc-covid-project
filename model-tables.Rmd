@@ -189,7 +189,3 @@ sum(two_way$residuals^2)
 
 
 ```
-```{r}
-pwtest(one_way)
-```
-
