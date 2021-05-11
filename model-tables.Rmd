@@ -148,21 +148,12 @@ stargazer(
 
 # ANVOA
 
-```{r anova, eval=FALSE}
+```{r anova, eval=TRUE}
 one_way <- 
 df %>%
   plm(
     cases_new ~ stringency_index_lag * state_level_index - state_level_index +
-      I(stringency_index_lag ^ 2) +
-      median_household_income +
-      percent_adults_with_ba +
-      percent_in_fair_or_poor_health +
-      percent_black +
-      density +
-      percent_rural +
-      percent_65 +
-      average_temperature +
-      governor_political_affiliation,
+      I(stringency_index_lag ^ 2),
     data = .,
     effect = "time",
     index = "state",
@@ -184,8 +175,9 @@ sum(one_way$residuals^2)
 sum(two_way$residuals^2)
 
 # Calculate F-stat for restrictions. 
-((sum(one_way$residuals^2) - sum(two_way$residuals^2))/ 9) / (sum(two_way$residuals^2)/two_way$df.residual)
+((sum(one_way$residuals^2) - sum(two_way$residuals^2))/ 1) / (sum(two_way$residuals^2)/two_way$df.residual)
 
 
 
 ```
+
