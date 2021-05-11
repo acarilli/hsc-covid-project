@@ -75,7 +75,8 @@ stargazer(
         average_temperature +
         governor_political_affiliation + 
         percent_in_fair_or_poor_health +
-        stringency_index_lag,
+        stringency_index_lag +
+        I(stringency_index_lag)^2,
       data = .,
       effect = "time",
       index = "state",
@@ -88,7 +89,7 @@ stargazer(
       data = .,
       effect = "twoways",
       index = "state",
-      method = "withing"
+      method = "within"
     ),
     type = "html"
 )
@@ -149,7 +150,7 @@ stargazer(
 
 # ANVOA
 
-```{r anova, eval=TRUE}
+```{r anova, eval=FALSE}
 one_way <- 
 df %>%
   plm(
@@ -185,7 +186,7 @@ sum(two_way$residuals^2)
 
 # Index and sub-index regressions complete two-way
 
-```{r two-way-complete}
+```{r two-way-complete, eval=FALSE}
 
 models_by_social_capital_measure <- list()
 
@@ -211,7 +212,7 @@ names(models_by_social_capital_measure) <- soc_cap_measures
 stargazer(models_by_social_capital_measure, type = "html")
 ```
 
-```{r}
+```{r eval=FALSE}
 pFtest(
 
 df %>% 
@@ -244,29 +245,20 @@ pooltest(cases_new ~ stringency_index_lag * state_level_index +
       method = "within")
 ```
 
-```{r eval=FALSE}
-df %>%
-    plm(
-      cases_new ~ stringency_index_lag * state_level_index  +
-        I(stringency_index_lag ^ 2) +
-        average_temperature +
-        governor_political_affiliation + 
-        percent_in_fair_or_poor_health |
-        median_household_income +
-        percent_adults_with_ba +
-        percent_black +
-        density +
-        percent_rural +
-        percent_65 +
-        average_temperature +
-        governor_political_affiliation + 
-        percent_in_fair_or_poor_health +
-        stringency_index_lag,
-      data = .,
-      effect = "time",
-      index = "state",
-      model = "within"
-    )%>% 
-  summary()
-```
 
+```{r}
+df %>% 
+  select(median_household_income,
+        percent_adults_with_ba,
+        percent_black,
+        density,
+        percent_rural,
+        percent_65,
+        average_temperature,
+        percent_in_fair_or_poor_health,
+        state_level_index,
+        cases_new) %>% 
+  drop_na() %>% 
+  cor()
+  
+```
