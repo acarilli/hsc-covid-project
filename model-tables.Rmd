@@ -272,7 +272,7 @@ for (i in seq_along(soc_cap_measures)) {
     df %>%
     plm(
       cases_new ~ stringency_index_lag * get(soc_cap_measures[i]) +
-        I(stringency_index_lag ^ 2)
+        I(stringency_index_lag ^ 2) +
         median_household_income +
         percent_adults_with_ba +
         percent_in_fair_or_poor_health +
