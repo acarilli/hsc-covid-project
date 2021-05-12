@@ -124,7 +124,7 @@ stargazer(
       index = "state",
       method = "within"
     ),
-  type "html"
+  type = "html"
 )
 ```
 
