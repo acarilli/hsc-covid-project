@@ -31,7 +31,7 @@ soc_cap_measures <- sc_names[c(14:17, 46:53)]
 
 # Table 1
 
-```{r table-1}
+```{r table-1, results='asis'}
 stargazer(
   df %>%
     plm(
@@ -98,7 +98,7 @@ stargazer(
 
 # Table 2
 
-```{r table-2}
+```{r table-2, results='asis'}
 stargazer(
   df %>%
     plm(
@@ -130,7 +130,7 @@ stargazer(
 
 # Table 3
 
-```{r table-3}
+```{r table-3, results='asis'}
 table_3_models <- list()
 
 for (i in 1:4) {
@@ -160,7 +160,7 @@ stargazer(table_3_models,
 
 # Table 4
 
-```{r table-4}
+```{r table-4, results='asis'}
 
 stargazer(
   df %>%
