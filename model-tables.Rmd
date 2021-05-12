@@ -262,14 +262,50 @@ df %>%
   cor()
   
 ```
-# Index and sub-index regressions complete one-way
+# Index and sub-index regressions complete equation 2
 
-```{r one-way-complete}
-
-models_by_social_capital_measure_one_way <- list()
+```{r eq-2-models}
+equation_2_models <- list()
 
 for (i in seq_along(soc_cap_measures)) {
-  models_by_social_capital_measure_one_way[[i]] <-
+  equation_2_models[[i]] <-
+    df %>%
+    plm(
+      cases_new ~ stringency_index_lag * get(soc_cap_measures[i]) +
+        I(stringency_index_lag ^ 2)
+        median_household_income +
+        percent_adults_with_ba +
+        percent_in_fair_or_poor_health +
+        percent_black +
+        density +
+        percent_rural +
+        percent_65 +
+        average_temperature +
+        governor_political_affiliation, 
+      data = .,
+      effect = "time",
+      index = "state",
+      model = "within"
+    ) %>% 
+    summary()
+}
+
+names(equation_2_models) <- soc_cap_measures
+
+
+equation_2_models
+```
+
+
+
+# Index and sub-index regressions complete equation 3
+
+```{r eq-3-models}
+
+equation_3_models <- list()
+
+for (i in seq_along(soc_cap_measures)) {
+  equation_3_models[[i]] <-
     df %>%
     plm(
       cases_new ~ stringency_index_lag * get(soc_cap_measures[i]) +
@@ -296,8 +332,491 @@ for (i in seq_along(soc_cap_measures)) {
     summary()
 }
 
-names(models_by_social_capital_measure_one_way) <- soc_cap_measures
+names(equation_3_models) <- soc_cap_measures
 
 
-models_by_social_capital_measure_one_way
+equation_3_models
 ```
+
+# Index and sub-index regressions complete equation 4
+
+```{r eq-4-models}
+equation_4_models <- list()
+
+for (i in seq_along(soc_cap_measures)) {
+  equation_4_models[[i]] <-
+    df %>%
+    plm(
+      cases_new ~ stringency_index_lag * get(soc_cap_measures[i]) +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "twoways",
+      index = "state",
+      model = "within"
+    ) %>% 
+    summary()
+}
+
+names(equation_4_models) <- soc_cap_measures
+
+equation_4_models
+```
+
+# Equation 2 by quarter
+
+```{r eq-2-by-quarter}
+equation_2_q1 <- list()
+
+for (i in seq_along(soc_cap_measures)) {
+  equation_2_q1[[i]] <-
+    df %>%
+    filter(date >= "2020-03-01", date < "2020-06-01") %>%
+    plm(
+      cases_new ~ stringency_index_lag * get(soc_cap_measures[i]) +
+        I(stringency_index_lag ^ 2) +
+        median_household_income +
+        percent_adults_with_ba +
+        percent_in_fair_or_poor_health +
+        percent_black +
+        density +
+        percent_rural +
+        percent_65 +
+        average_temperature +
+        governor_political_affiliation,
+      data = .,
+      effect = "time",
+      index = "state",
+      model = "within"
+    ) %>% 
+    summary()
+}
+
+names(equation_2_q1) <- soc_cap_measures
+
+equation_2_q2 <- list()
+
+for (i in seq_along(soc_cap_measures)) {
+  equation_2_q2[[i]] <-
+    df %>%
+    filter(date >= "2020-06-01", date < "2020-09-01") %>%
+    plm(
+      cases_new ~ stringency_index_lag * get(soc_cap_measures[i]) +
+        I(stringency_index_lag ^ 2) +
+        median_household_income +
+        percent_adults_with_ba +
+        percent_in_fair_or_poor_health +
+        percent_black +
+        density +
+        percent_rural +
+        percent_65 +
+        average_temperature +
+        governor_political_affiliation,
+      data = .,
+      effect = "time",
+      index = "state",
+      model = "within"
+    ) %>% 
+    summary()
+}
+
+names(equation_2_q2) <- soc_cap_measures
+
+equation_2_q3 <- list()
+
+for (i in seq_along(soc_cap_measures)) {
+  equation_2_q3[[i]] <-
+    df %>%
+    filter(date >= "2020-09-01", date < "2020-12-01") %>%
+    plm(
+      cases_new ~ stringency_index_lag * get(soc_cap_measures[i]) +
+        I(stringency_index_lag ^ 2) +
+        median_household_income +
+        percent_adults_with_ba +
+        percent_in_fair_or_poor_health +
+        percent_black +
+        density +
+        percent_rural +
+        percent_65 +
+        average_temperature +
+        governor_political_affiliation,
+      data = .,
+      effect = "time",
+      index = "state",
+      model = "within"
+    ) %>% 
+    summary()
+}
+
+names(equation_2_q3) <- soc_cap_measures
+
+
+equation_2_q4 <- list()
+
+for (i in seq_along(soc_cap_measures)) {
+  equation_2_q4[[i]] <-
+    df %>%
+    filter(date >= "2020-12-01", date < "2021-03-01") %>%
+    plm(
+      cases_new ~ stringency_index_lag * get(soc_cap_measures[i]) +
+        I(stringency_index_lag ^ 2) +
+        median_household_income +
+        percent_adults_with_ba +
+        percent_in_fair_or_poor_health +
+        percent_black +
+        density +
+        percent_rural +
+        percent_65 +
+        average_temperature +
+        governor_political_affiliation,
+      data = .,
+      effect = "time",
+      index = "state",
+      model = "within"
+    ) %>% 
+    summary()
+}
+
+names(equation_2_q4) <- soc_cap_measures
+
+
+equation_2_q5 <- list()
+
+for (i in seq_along(soc_cap_measures)) {
+  equation_2_q5[[i]] <-
+    df %>%
+    filter(date >= "2020-03-01") %>%
+    plm(
+      cases_new ~ stringency_index_lag * get(soc_cap_measures[i]) +
+        I(stringency_index_lag ^ 2) +
+        median_household_income +
+        percent_adults_with_ba +
+        percent_in_fair_or_poor_health +
+        percent_black +
+        density +
+        percent_rural +
+        percent_65 +
+        average_temperature +
+        governor_political_affiliation,
+      data = .,
+      effect = "time",
+      index = "state",
+      model = "within"
+    ) %>% 
+    summary()
+}
+
+names(equation_2_q5) <- soc_cap_measures
+```
+
+```{r eq-2-q-results}
+equation_2_q1
+equation_2_q2
+equation_2_q3
+equation_2_q4
+equation_2_q5
+```
+
+# Equation 3 by quarter
+
+```{r eq-3-by-quarter}
+equation_3_q1 <- list()
+
+for (i in seq_along(soc_cap_measures)) {
+  equation_3_q1[[i]] <-
+    df %>%
+    filter(date >= "2020-03-01", date < "2020-06-01") %>%
+    plm(
+      cases_new ~ stringency_index_lag * get(soc_cap_measures[i]) +
+        I(stringency_index_lag ^ 2) +
+        average_temperature +
+        governor_political_affiliation +
+        percent_in_fair_or_poor_health |
+        median_household_income +
+        percent_adults_with_ba +
+        percent_in_fair_or_poor_health +
+        percent_black +
+        density +
+        percent_rural +
+        percent_65 +
+        average_temperature +
+        governor_political_affiliation +
+        stringency_index_lag +
+        I(stringency_index_lag^2),
+      data = .,
+      effect = "time",
+      index = "state",
+      model = "within"
+    ) %>% 
+    summary()
+}
+
+names(equation_3_q1) <- soc_cap_measures
+
+equation_3_q2 <- list()
+
+for (i in seq_along(soc_cap_measures)) {
+  equation_3_q2[[i]] <-
+    df %>%
+    filter(date >= "2020-06-01", date < "2020-09-01") %>%
+    plm(
+      cases_new ~ stringency_index_lag * get(soc_cap_measures[i]) +
+        I(stringency_index_lag ^ 2) +
+         average_temperature +
+        governor_political_affiliation +
+        percent_in_fair_or_poor_health |
+        median_household_income +
+        percent_adults_with_ba +
+        percent_in_fair_or_poor_health +
+        percent_black +
+        density +
+        percent_rural +
+        percent_65 +
+        average_temperature +
+        governor_political_affiliation +
+        stringency_index_lag +
+        I(stringency_index_lag^2),
+      data = .,
+      effect = "time",
+      index = "state",
+      model = "within"
+    ) %>% 
+    summary()
+}
+
+names(equation_3_q2) <- soc_cap_measures
+
+equation_3_q3 <- list()
+
+for (i in seq_along(soc_cap_measures)) {
+  equation_3_q3[[i]] <-
+    df %>%
+    filter(date >= "2020-09-01", date < "2020-12-01") %>%
+    plm(
+      cases_new ~ stringency_index_lag * get(soc_cap_measures[i]) +
+        I(stringency_index_lag ^ 2) +
+        average_temperature +
+        governor_political_affiliation +
+        percent_in_fair_or_poor_health |
+        median_household_income +
+        percent_adults_with_ba +
+        percent_in_fair_or_poor_health +
+        percent_black +
+        density +
+        percent_rural +
+        percent_65 +
+        average_temperature +
+        governor_political_affiliation +
+        stringency_index_lag +
+        I(stringency_index_lag^2),
+      data = .,
+      effect = "time",
+      index = "state",
+      model = "within"
+    ) %>% 
+    summary()
+}
+
+names(equation_3_q3) <- soc_cap_measures
+
+
+equation_3_q4 <- list()
+
+for (i in seq_along(soc_cap_measures)) {
+  equation_3_q4[[i]] <-
+    df %>%
+    filter(date >= "2020-12-01", date < "2021-03-01") %>%
+    plm(
+      cases_new ~ stringency_index_lag * get(soc_cap_measures[i]) +
+        I(stringency_index_lag ^ 2) +
+         average_temperature +
+        governor_political_affiliation +
+        percent_in_fair_or_poor_health |
+        median_household_income +
+        percent_adults_with_ba +
+        percent_in_fair_or_poor_health +
+        percent_black +
+        density +
+        percent_rural +
+        percent_65 +
+        average_temperature +
+        governor_political_affiliation +
+        stringency_index_lag +
+        I(stringency_index_lag^2),
+      data = .,
+      effect = "time",
+      index = "state",
+      model = "within"
+    ) %>% 
+    summary()
+}
+
+names(equation_3_q4) <- soc_cap_measures
+
+
+equation_3_q5 <- list()
+
+for (i in seq_along(soc_cap_measures)) {
+  equation_3_q5[[i]] <-
+    df %>%
+    filter(date >= "2020-03-01") %>%
+    plm(
+      cases_new ~ stringency_index_lag * get(soc_cap_measures[i]) +
+        I(stringency_index_lag ^ 2) +
+         average_temperature +
+        governor_political_affiliation +
+        percent_in_fair_or_poor_health |
+        median_household_income +
+        percent_adults_with_ba +
+        percent_in_fair_or_poor_health +
+        percent_black +
+        density +
+        percent_rural +
+        percent_65 +
+        average_temperature +
+        governor_political_affiliation +
+        stringency_index_lag +
+        I(stringency_index_lag^2),
+      data = .,
+      effect = "time",
+      index = "state",
+      model = "within"
+    ) %>% 
+    summary()
+}
+
+names(equation_3_q5) <- soc_cap_measures
+```
+``
+```{r eq-3-q-results}
+equation_3_q1
+equation_3_q2
+equation_3_q3
+equation_3_q4
+equation_3_q5
+```
+
+# Equation 4 by quarter
+
+
+```{r eq-4-by-quarters}
+equation_4_q1 <- list()
+
+for (i in seq_along(soc_cap_measures)) {
+  # for(i in 1:1)  {
+  # sc_i <- soc_cap_measures[i]
+  
+  equation_4_q1[[i]] <-
+    df %>%
+    filter(date >= "2020-03-01", date < "2020-06-01") %>%
+    plm(
+      cases_new ~ stringency_index_lag * get(soc_cap_measures[i]) +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "twoways",
+      index = "state",
+      model = "within"
+    ) %>%
+    summary()
+}
+
+names(equation_4_q1) <- soc_cap_measures
+
+
+
+equation_4_q2 <- list()
+
+for (i in seq_along(soc_cap_measures)) {
+  # for(i in 1:1)  {
+  # sc_i <- soc_cap_measures[i]
+  
+  equation_4_q2[[i]] <-
+    df %>%
+    filter(date >= "2020-06-01", date < "2020-09-01") %>%
+    plm(
+      cases_new ~ stringency_index_lag * get(soc_cap_measures[i]) +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "twoways",
+      index = "state",
+      model = "within"
+    ) %>%
+    summary()
+}
+
+names(equation_4_q2) <- soc_cap_measures
+
+equation_4_q3 <- list()
+
+for (i in seq_along(soc_cap_measures)) {
+  # for(i in 1:1)  {
+  # sc_i <- soc_cap_measures[i]
+  
+  equation_4_q3[[i]] <-
+    df %>%
+    filter(date >= "2020-09-01", date < "2020-12-01") %>%
+    plm(
+      cases_new ~ stringency_index_lag * get(soc_cap_measures[i]) +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "twoways",
+      index = "state",
+      model = "within"
+    ) %>%
+    summary()
+}
+
+names(equation_4_q3) <- soc_cap_measures
+
+equation_4_q4 <- list()
+
+for (i in seq_along(soc_cap_measures)) {
+  # for(i in 1:1)  {
+  # sc_i <- soc_cap_measures[i]
+  
+  equation_4_q4[[i]] <-
+    df %>%
+    filter(date >= "2020-12-01", date < "2021-03-01") %>%
+    plm(
+      cases_new ~ stringency_index_lag * get(soc_cap_measures[i]) +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "twoways",
+      index = "state",
+      model = "within"
+    ) %>%
+    summary()
+}
+
+names(equation_4_q4) <- soc_cap_measures
+
+equation_4_q5 <- list()
+
+for (i in seq_along(soc_cap_measures)) {
+  # for(i in 1:1)  {
+  # sc_i <- soc_cap_measures[i]
+  
+  equation_4_q5[[i]] <-
+    df %>%
+    filter(date >= "2021-03-01") %>%
+    plm(
+      cases_new ~ stringency_index_lag * get(soc_cap_measures[i]) +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "twoways",
+      index = "state",
+      model = "within"
+    ) %>%
+    summary()
+}
+
+names(equation_4_q5) <- soc_cap_measures
+```
+
+```{r eq-4-results}
+equation_4_q1
+equation_4_q2
+equation_4_q3
+equation_4_q4
+equation_4_q5
+```
+
