@@ -18,7 +18,8 @@ library(plm)
 library(stargazer)
 df <- # data
   here::here("data", "covid_data_final.csv") %>% 
-  read_csv()
+  read_csv() %>% 
+  filter(date >= "2020-03-01")
 
 sc_names <-
   df %>%
