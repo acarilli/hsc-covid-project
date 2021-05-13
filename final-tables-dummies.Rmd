@@ -1,0 +1,304 @@
+---
+title: "Final Tables with Quarterly and Vaccine Dummies"
+author: "Tony Carilli"
+date: '`r format(lubridate::today(), "%B %d, %Y")`'
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    df_print: paged
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA,
+                      options(digits = 3, scipen = 999))
+library(tidyverse)
+library(plm)
+library(stargazer)
+df <- # data
+  here::here("data", "covid_data_final.csv") %>% 
+  read_csv() %>% 
+  filter(date >= "2020-03-01")
+
+sc_names <-
+  df %>%
+  names() 
+
+soc_cap_measures <- sc_names[c(14:17, 46:53)]
+```
+
+
+# Table 1
+
+```{r table-1, results='asis'}
+stargazer(
+  df %>%
+    plm(
+      cases_new ~ stringency_index_lag * state_level_index +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "time",
+      index = "state",
+      model = "within"
+    ),
+  df %>%
+    plm(
+      cases_new ~ stringency_index_lag * state_level_index +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "twoways",
+      index = "state",
+      method = "within"
+    ),
+  df %>%
+    plm(
+      cases_new ~ stringency_index_lag * state_level_index +
+        I(stringency_index_lag ^ 2) +
+        median_household_income +
+        percent_adults_with_ba +
+        percent_in_fair_or_poor_health +
+        percent_black +
+        density +
+        percent_rural +
+        percent_65 +
+        average_temperature +
+        governor_political_affiliation,
+      data = .,
+      effect = "time",
+      index = "state",
+      model = "within"
+    ),
+  df %>%
+    plm(
+      cases_new ~ stringency_index_lag * state_level_index  +
+        I(stringency_index_lag ^ 2) +
+        average_temperature +
+        governor_political_affiliation +
+        percent_in_fair_or_poor_health |
+        median_household_income +
+        percent_adults_with_ba +
+        percent_black +
+        density +
+        percent_rural +
+        percent_65 +
+        average_temperature +
+        governor_political_affiliation +
+        percent_in_fair_or_poor_health +
+        stringency_index_lag +
+        I(stringency_index_lag) ^ 2,
+      data = .,
+      effect = "time",
+      index = "state",
+      model = "within"
+    ),
+  type = "html",
+  se = 
+)
+```
+
+# Table 2
+
+```{r table-2, results='asis'}
+stargazer(
+  df %>%
+    plm(
+      cases_new ~ stringency_index_lag * state_level_index +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "twoways",
+      index = "state",
+      method = "within"
+    ),
+  df %>%
+    plm(
+      cases_new ~ stringency_index_lag * family_unity +
+        stringency_index_lag * family_interaction +
+        stringency_index_lag * social_support +
+        stringency_index_lag * community_health +
+        stringency_index_lag * institutional_health +
+        stringency_index_lag * collective_efficacy +
+        stringency_index_lag * philanthropic_health +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "twoways",
+      index = "state",
+      method = "within"
+    ),
+  type = "html"
+)
+```
+
+# Table 3
+
+```{r table-3, results='asis'}
+table_3_models <- list()
+
+for (i in 1:4) {
+  # for(i in 1:1)  {
+  # sc_i <- soc_cap_measures[i]
+  
+  table_3_models[[i]] <-
+    df %>%
+    plm(
+      cases_new ~ stringency_index_lag * get(soc_cap_measures[i]) +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "twoways",
+      index = "state",
+      model = "within"
+    ) 
+}
+
+names(table_3_models) <- soc_cap_measures[1:4]
+
+
+stargazer(table_3_models, 
+          type = "html", 
+          model.names = TRUE
+          )
+```
+
+# Table 4
+
+```{r table-4, results='asis'}
+
+stargazer(
+  df %>%
+    filter(date >= "2020-03-01", date < "2020-06-01") %>%
+    plm(
+      cases_new ~ stringency_index_lag * state_level_index +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "twoways",
+      index = "state",
+      model = "within"
+    ),
+  
+  df %>%
+    filter(date >= "2020-06-01", date < "2020-09-01") %>%
+    plm(
+      cases_new ~ stringency_index_lag * state_level_index +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "twoways",
+      index = "state",
+      model = "within"
+    ),
+  
+  df %>%
+    filter(date >= "2020-09-01", date < "2020-12-01") %>%
+    plm(
+      cases_new ~ stringency_index_lag * state_level_index +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "twoways",
+      index = "state",
+      model = "within"
+    ),
+  
+  df %>%
+    filter(date >= "2020-12-01", date < "2021-03-01") %>%
+    plm(
+      cases_new ~ stringency_index_lag * state_level_index +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "twoways",
+      index = "state",
+      model = "within"
+    ),
+  
+  df %>%
+    filter(date >= "2021-03-01") %>%
+    plm(
+      cases_new ~ stringency_index_lag * state_level_index +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "twoways",
+      index = "state",
+      model = "within"
+    ),
+  type = "html"
+)
+```
+
+
+
+
+```{r}
+lmtest::coeftest(
+  df %>%
+    plm(
+      cases_new ~ stringency_index_lag * state_level_index +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "twoways",
+      index = "state",
+      method = "within"
+    ),
+  vcov. = sandwich::vcovPL(
+    df %>%
+      plm(
+        cases_new ~ stringency_index_lag * state_level_index +
+          I(stringency_index_lag ^ 2),
+        data = .,
+        effect = "twoways",
+        index = "state",
+        method = "within"
+      ),
+    cluster = state
+  )
+  
+)
+```
+
+```{r}
+df %>%
+  mutate(
+    # quarter = case_when(
+    #   date >= "2020-03-01" & date <= "2020-05-31" ~ "q1",
+    #   date >= "2020-06-01" & date <= "2020-08-31" ~ "q2",
+    #   date >= "2020-09-01" & date <= "2020-11-30" ~ "q3",
+    #   date >= "2020-12-01" & date <= "2021-02-28" ~ "q4",
+    #   date >= "2021-03-01" ~ "q5"
+    # ),
+    q1 = ifelse(date >= "2020-03-01" & date <= "2020-05-31", 1, 0),
+    q2 = ifelse(date >= "2020-06-01" & date <= "2020-08-31", 1, 0),
+    q3 = ifelse(date >= "2020-09-01" & date <= "2020-11-30", 1, 0),
+    q4 = ifelse(date >= "2020-12-01" & date <= "2021-02-28", 1, 0),
+    q5 = ifelse(date >= "2021-03-01", 1, 0),
+    vaccine = ifelse(date >= "2020-12-14", 1, 0)
+  ) %>% 
+  filter(date >= "2020-03-01") %>% 
+     plm(
+      cases_new ~ stringency_index_lag * state_level_index +
+        vaccine +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "twoways",
+      index = "state",
+      method = "within"
+    ) %>% 
+  summary()
+  
+```
+
+```{r}
+sandwich::vcovPL(x, cluster = ~state, order.by = ~date) %>% 
+diag() %>% 
+  sqrt()
+```
+
+```{r}
+df %>%
+  plm(
+    cases_new ~ stringency_index_lag * state_level_index +
+      I(stringency_index_lag ^ 2),
+    data = .,
+    effect = "twoways",
+    index = "state",
+    method = "within"
+  ) %>%
+  clubSandwich::coef_test(vcov = "CR1", cluster = "state")
+```
+
