@@ -1,23 +1,24 @@
 ---
-title: "Untitled"
+title: "Descriptive Stats
 author: "Tony Carilli"
 date: '`r format(lubridate::today(), "%B %d, %Y")`'
 output: 
   html_document:
-    toc: true
+    toc: false
     toc_float: true
     df_print: paged
-    keep_md: true
+    keep_md: false
+    code_folding: hide
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, comment = NA,
+knitr::opts_chunk$set(echo = TRUE, comment = NA, message = FALSE,
                       options(digits = 3, scipen = 999))
 library(tidyverse)
 library(gt)
 ```
 
-```{r message=FALSE}
+```{r message=FALSE, eval=FALSE}
 df <-
   here::here("data", "covid_data_final.csv") %>%
   read_csv() %>%
@@ -51,6 +52,14 @@ df <-
 ```
 
 ```{r}
+df <- # data
+  here::here("data", "covid_data_final.csv") %>% 
+  read_csv() %>% 
+  filter(date >= "2020-03-01")
+```
+
+
+```{r eval=FALSE}
 df %>% 
   pivot_longer(-c(state, governor_political_affiliation)) %>% 
   ggplot(aes(x = value)) + 
@@ -58,7 +67,7 @@ df %>%
   facet_wrap(~ name, scales = "free_x")
 ```
 
-```{r}
+```{r eval=FALSE}
 df %>% 
   select(-c(state, governor_political_affiliation)) %>% 
   pastecs::stat.desc() %>% 
@@ -93,4 +102,171 @@ df %>%
   summarytools::freq()
 ```
 
-some more changes
+```{r results='asis'}
+df %>% 
+  select(cases_new, stringency_index, median_household_income, 
+         percent_adults_with_ba, percent_in_fair_or_poor_health,
+         percent_black, density, percent_rural, percent_65, average_temperature,
+         state_level_index) %>% 
+  as.data.frame() %>% 
+  stargazer::stargazer(type = "html")
+```
+
+```{r eval=FALSE}
+df %>% 
+  select(cases_new, stringency_index, median_household_income, 
+         percent_adults_with_ba, percent_in_fair_or_poor_health,
+         percent_black, density, percent_rural, percent_65, average_temperature,
+         state_level_index) %>% 
+  pastecs::stat.desc() %>% 
+  rownames_to_column("stat") %>% 
+  filter(stat %in% c("nbr.val",
+                          "min",
+                          "max",
+                          "mean", 
+                          "median",
+                          "std.dev")) %>% 
+  pivot_longer(everything(),
+    values_to = "Statistic",
+    names_to = "Variable"
+  )
+  gt() %>% 
+  tab_header(title = "Descriptive Statistics") %>% 
+  cols_label(stat = "Statistic",
+             cases_new = "New Cases",
+             stringency_index = "Stringency Index",
+             median_household_income = "Median Household Income",
+             percent_adults_with_ba = "Adults w/ BA (%)",
+             percent_in_fair_or_poor_health = "Fair or Poor Health (%)",
+             percent_black = "Black (%)",
+             density = "Pop Density",
+             percent_rural = "Rural Pop (%)",
+             percent_65 = "Age > 65 (%)",
+             average_temperature = "Average Temperature",
+             state_level_index = "Social Capital"
+  ) %>% 
+  cols_align("center") 
+```
+
+```{r}
+df %>%
+  select(
+    cases_new,
+    stringency_index,
+    median_household_income,
+    percent_adults_with_ba,
+    percent_in_fair_or_poor_health,
+    percent_black,
+    density,
+    percent_rural,
+    percent_65,
+    average_temperature,
+    state_level_index
+  ) %>%
+  pastecs::stat.desc() %>%
+  rownames_to_column("stat") %>%
+  filter(stat %in% c("nbr.val",
+                     "min",
+                     "max",
+                     "mean",
+                     "median",
+                     "std.dev")) %>%
+  pivot_longer(-stat) %>%
+  pivot_wider(names_from = "stat") %>%
+  select(-name) %>% 
+  mutate(row_names = c("New Cases", 
+                       "Stringency Index",
+                       "Median Household Income",
+                       "% Adults w/ BA",
+                       "% Fair or Poor Health",
+                       "% Black",
+                       "Pop. Density",
+                       "% Rural",
+                       "% > 65",
+                       "Average Temperature",
+                       "Social Capital Index")) %>% 
+  gt(rowname_col = "row_names") %>%
+  tab_header(title = "Descriptive Statistics") %>%
+  cols_label(
+    nbr.val = "N",
+    min = "Min",
+    max = "Max",
+    median = "Median",
+    mean = "Mean",
+    std.dev = glue::glue("Standard \n Deviation")
+  ) %>%
+  cols_align("center") %>% 
+  fmt_number(columns = c("mean","median"),
+             decimals = 2)
+```
+
+```{r}
+df %>%
+    plm::plm(
+      cases_new ~ stringency_index_lag * state_level_index +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "twoways",
+      index = "state",
+      method = "within"
+    ) %>% 
+  broom::tidy() %>% 
+  pull(estimate) ->
+  coefs
+```
+
+
+```{r}
+
+sc_index <- seq(-2.15, 2.15, by = .1)
+stringency_index <- 0:90
+
+
+```
+
+
+```{r}
+new <- tibble()
+
+for (i in seq_along(sc_index)) {
+  for (j in seq_along(stringency_index)) {
+    new[i, j] <- coefs[1] * stringency_index[j] +
+      coefs[2] * stringency_index[j] ^ 2 +
+      coefs[3] * stringency_index[j] * sc_index[i]
+  }
+}
+
+
+new %>% 
+  select(min = "...1",
+         q1 = "...39",
+         q2 = "...49",
+         q3 = "...60",
+         max = "...89") %>% 
+  mutate(sc_index = sc_index) %>% 
+  pivot_longer(-sc_index,
+               names_to = "stringency_index",
+               values_to = "new_cases") %>% 
+  ggplot(aes(x = sc_index, y = new_cases, color = stringency_index)) + 
+  geom_line()
+
+# new %>% 
+#   select("...50", "...89", "...1", "...39", "...60") %>% 
+#   mutate(sc_index = sc_index) %>% 
+#   ggplot(aes(y = ...50, x = sc_index)) +
+#   geom_line() +
+#   geom_line(aes(x = sc_index, y = ...89), color = "blue") +
+#   geom_line(aes(x = sc_index, y = ...1), color = "red") +
+#   geom_line(aes(x = sc_index, y = ...39), color = "green") +
+#   geom_line(aes(x = sc_index, y = ...60), color = "purple")
+```
+
+```{r}
+new
+```
+
+```{r}
+df$stringency_index %>% 
+  summary()
+```
+
