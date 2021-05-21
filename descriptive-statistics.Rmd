@@ -218,7 +218,7 @@ df %>%
 
 ```{r}
 
-sc_index <- seq(-2.15, 2.15, by = .1)
+sc_index <- c(-2.15, -2, -1, 0, 1, 2, 2.08)
 stringency_index <- 0:90
 
 
@@ -262,11 +262,13 @@ new %>%
 ```
 
 ```{r}
-new
-```
-
-```{r}
-df$stringency_index %>% 
-  summary()
+new %>% 
+  select(min = "...1",
+         q1 = "...39",
+         q2 = "...49",
+         q3 = "...60",
+         max = "...89") %>% 
+  mutate(sc_index = sc_index) %>% 
+  relocate(sc_index)
 ```
 
