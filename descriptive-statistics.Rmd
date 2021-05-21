@@ -1,5 +1,5 @@
 ---
-title: "Descriptive Stats
+title: "Descriptive Stats"
 author: "Tony Carilli"
 date: '`r format(lubridate::today(), "%B %d, %Y")`'
 output: 
@@ -7,7 +7,6 @@ output:
     toc: false
     toc_float: true
     df_print: paged
-    keep_md: false
     code_folding: hide
 ---
 
