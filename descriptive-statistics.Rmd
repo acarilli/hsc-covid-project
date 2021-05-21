@@ -101,7 +101,7 @@ df %>%
   summarytools::freq()
 ```
 
-```{r results='asis'}
+```{r results='asis', eval=FALSE}
 df %>% 
   select(cases_new, stringency_index, median_household_income, 
          percent_adults_with_ba, percent_in_fair_or_poor_health,
