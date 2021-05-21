@@ -217,10 +217,12 @@ df %>%
 
 ```{r}
 
-sc_index <- c(-2.15, -2, -1, 0, 1, 2, 2.08)
-stringency_index <- 0:90
-
-
+sc_index <- c(-2, -1, 0, 1, 2)
+stringency_index <-
+  df %>%
+  summarize(quant = quantile(stringency_index_lag, na.rm = TRUE)) %>%
+  filter(between(quant, 1, 87)) %>% 
+  pull(quant)
 ```
 
 
@@ -235,13 +237,12 @@ for (i in seq_along(sc_index)) {
   }
 }
 
+new
 
 new %>% 
-  select(min = "...1",
-         q1 = "...39",
-         q2 = "...49",
-         q3 = "...60",
-         max = "...89") %>% 
+  select(q1 = "...1",
+         q2 = "...2",
+         q3 = "...3") %>% 
   mutate(sc_index = sc_index) %>% 
   pivot_longer(-sc_index,
                names_to = "stringency_index",
@@ -260,29 +261,19 @@ new %>%
 #   geom_line(aes(x = sc_index, y = ...60), color = "purple")
 ```
 
-```{r}
-new %>% 
-  select(min = "...1",
-         q1 = "...39",
-         q2 = "...49",
-         q3 = "...60",
-         max = "...89") %>% 
-  mutate(sc_index = sc_index) %>% 
-  relocate(sc_index)
-```
 
 ```{r}
 new %>%
-  select(q1 = "...39",
-         q2 = "...49",
-         q3 = "...60") %>%
+  select(q1 = "...1",
+         q2 = "...2",
+         q3 = "...3") %>%
   mutate(sc_index = sc_index) %>%
   relocate(sc_index) %>%
   arrange(desc(sc_index)) %>%
   pivot_longer(-sc_index) %>%
   pivot_wider(values_from = value,
               names_from = sc_index) %>%
-  select(1 , 3:7) %>%
+  # select(1 , 3:7) %>%
   arrange(desc(name)) %>% 
   mutate(name = c("High",
                   "Average",
