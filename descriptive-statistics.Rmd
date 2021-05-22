@@ -274,7 +274,7 @@ new %>%
   pivot_wider(values_from = value,
               names_from = sc_index) %>%
   # select(1 , 3:7) %>%
-  arrange(desc(name)) %>% 
+  arrange(desc(name)) %>%
   mutate(name = c("High",
                   "Average",
                   "Low")) %>%
@@ -292,7 +292,17 @@ new %>%
   ) %>%
   tab_spanner(label = "Level of Social Capital",
               columns = 2:6) %>%
-  tab_stubhead(label = "Desire for Prevention")
+  tab_stubhead(label = "Desire for Prevention") %>%
+  tab_footnote(
+    footnote = "Strong and Weak Social Capital are 
+               2 standard deviations above and below the mean level.",
+    locations = cells_column_spanners(everything())) %>%
+  tab_footnote(
+    footnote = "High, Average, and Low are measured at
+               the first, second, and third quartiles of the Stringency Index",
+    locations = cells_stubhead()
+  )
+  
   
 ```
 
