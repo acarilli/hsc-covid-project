@@ -306,11 +306,5 @@ new %>%
   
 ```
 
-```{r}
-df %>% 
-  select(stringency_index, stringency_index_lag) %>% 
-  summary()
-
-```
 
 
