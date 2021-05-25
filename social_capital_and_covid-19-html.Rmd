@@ -93,7 +93,57 @@ The data for our empirical analysis comes from a number of sources. Our dependen
 
 Our sample of state-level data supports the following characterization. The mean household income was \$56,031; the mean percent of people with a B.A. degree was about 30%; the mean percent of people who reported they were in poor or fair health was about 16%; the mean percent of Black or African American people was less than 11%; a mean population density of about 407 people per square mile; and a mean rural population of about 26%. Table 1 presents standard descriptive statistics for our sample of state-level data.
 
-[Insert Table 1 Here]
+```{r table-1}
+df %>%
+  select(
+    cases_new,
+    stringency_index,
+    median_household_income,
+    percent_adults_with_ba,
+    percent_in_fair_or_poor_health,
+    percent_black,
+    density,
+    percent_rural,
+    percent_65,
+    average_temperature,
+    state_level_index
+  ) %>%
+  pastecs::stat.desc() %>%
+  rownames_to_column("stat") %>%
+  filter(stat %in% c("nbr.val",
+                     "min",
+                     "max",
+                     "mean",
+                     "median",
+                     "std.dev")) %>%
+  pivot_longer(-stat) %>%
+  pivot_wider(names_from = "stat") %>%
+  select(-name) %>% 
+  mutate(row_names = c("New Cases", 
+                       "Stringency Index",
+                       "Median Household Income",
+                       "% Adults w/ BA",
+                       "% Fair or Poor Health",
+                       "% Black",
+                       "Pop. Density",
+                       "% Rural",
+                       "% > 65",
+                       "Average Temperature",
+                       "Social Capital Index")) %>% 
+  gt(rowname_col = "row_names") %>%
+  tab_header(title = "Descriptive Statistics") %>%
+  cols_label(
+    nbr.val = "N",
+    min = "Min",
+    max = "Max",
+    median = "Median",
+    mean = "Mean",
+    std.dev = glue::glue("Standard \n Deviation")
+  ) %>%
+  cols_align("center") %>% 
+  fmt_number(columns = c("mean","median"),
+             decimals = 2)
+```
 
 Table 2 presents results for the basic model and subsequent specifications for our balanced panel of daily data from March 1, 2020 to May 1, 2021 across fifty states and the District of Columbia. Column 1 estimates equation 1 using a within model that includes period fixed effects, whereas column 2 includes both cross-sectional and period fixed effects.
 
