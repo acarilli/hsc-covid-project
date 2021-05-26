@@ -27,7 +27,7 @@ soc_cap_measures <- sc_names[c(14:17, 46:53)]
 
 # Table 2
 
-```{r table-2, results='asis'}
+```{r table-2, results='asis', eval=FALSE}
 stargazer(
   df %>%
     plm(
@@ -114,17 +114,17 @@ stargazer(
 
 # Table 3
 
-```{r table-3, results='asis', eval=FALSE}
+```{r table-3, results='asis', eval=TRUE}
 stargazer(
-  df %>%
-    plm(
-      cases_new ~ stringency_index_lag * state_level_index +
-        I(stringency_index_lag ^ 2),
-      data = .,
-      effect = "twoways",
-      index = "state",
-      method = "within"
-    ),
+  # df %>%
+  #   plm(
+  #     cases_new ~ stringency_index_lag * state_level_index +
+  #       I(stringency_index_lag ^ 2),
+  #     data = .,
+  #     effect = "twoways",
+  #     index = "state",
+  #     method = "within"
+  #   ),
   df %>%
     plm(
       cases_new ~ stringency_index_lag * family_unity +
@@ -140,16 +140,19 @@ stargazer(
       index = "state",
       method = "within"
     ),
-  type = "html",
+  type = "latex",
   df = FALSE,
   covariate.labels = c(
-    "Stringency Lag",
-    "Stringency Lag Sqrd",
-    "Stringency Lag * Social Capital",
-    "Stringency Lag * Family Unity",
-    ""
+    "$\\mathrm{Stringency_{t-7}}$",
+    "$\\mathrm{Stringency}_{t-7}^2$",
+    "$\\mathrm{Stringency_{t-7}}$ * Family Interaction",
+    "$\\mathrm{Stringency_{t-7}}$ * Social Support",
+    "$\\mathrm{Stringency_{t-7}}$ * Community Health",
+    "$\\mathrm{Stringency_{t-7}}$ * Instutional Health",
+    "$\\mathrm{Stringency_{t-7}}$ * Collective Efficacy",
+    "$\\mathrm{Stringency_{t-7}}$ * Social Philanthropic Health"
   ),
-  title = "Social Capital Components",
+  title = "Disaggregated Social Capital Regression Results",
   dep.var.labels = "Daily New Cases per Million",
   header = FALSE
 )
