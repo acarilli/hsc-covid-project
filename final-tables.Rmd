@@ -6,7 +6,7 @@ output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, comment = NA,
+knitr::opts_chunk$set(echo = FALSE, comment = NA,
                       options(digits = 3, scipen = 999))
 library(tidyverse)
 library(plm)
@@ -91,23 +91,23 @@ stargazer(
   type = "latex",
   df = FALSE,
   covariate.labels = c(
-    "Stringency(-7)",
-    "Social Capital",
-    "Stringency Lag Sqrd",
+    "$\\mathrm{Stringency_{t-7}}$",
+    "Social K",
+    "$\\mathrm{Stringency}_{t-7}^2$",
     "Median Income",
-    "% Bachelor's",
-    "% Fair/Poor Health",
-    "% Black",
+    "\\% Bachelor's",
+    "\\% Fair/Poor Health",
+    "\\% Black",
     "Population Density",
-    "% Rural",
-    "% > 65",
+    "\\% Rural",
+    "\\% > 65",
     "Average Temperature",
     "Republican Governor",
-    "Stringency Lag * Social Capital"
+    "$\\mathrm{Stringency_{t-7}}$ * Social K"
   ),
   title = "Fixed Effects Regression Results",
   dep.var.labels = "Daily New Cases per Million",
-  # column.labels = c("$\\beta_{it}$", "$\\beta_t$", "$\\beta_t$", "$\\beta_t$")
+  column.labels = c("$\\mathrm{FE_{i,t}}$", "$\\mathrm{FE_t}$", "$\\mathrm{FE_t}$", "$\\mathrm{IVFE_t}$"),
   header = FALSE
 )
 ```
