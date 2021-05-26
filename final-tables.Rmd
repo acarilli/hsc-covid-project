@@ -114,7 +114,7 @@ stargazer(
 
 # Table 3
 
-```{r table-3, results='asis', eval=TRUE}
+```{r table-3, results='asis', eval=FALSE}
 stargazer(
   # df %>%
   #   plm(
@@ -160,7 +160,7 @@ stargazer(
 
 # Table 4
 
-```{r table-4, results='asis', eval=FALSE}
+```{r table-4, results='asis', eval=TRUE}
 table_3_models <- list()
 
 for (i in 1:4) {
@@ -182,10 +182,20 @@ for (i in 1:4) {
 names(table_3_models) <- soc_cap_measures[1:4]
 
 
-stargazer(table_3_models, 
-          type = "html", 
-          model.names = TRUE
-          )
+stargazer(
+  table_3_models,
+  type = "latex",
+  model.names = TRUE,
+  df = FALSE,
+  covariate.labels = c(
+    "$\\mathrm{Stringency_{t-7}}$",
+    "$\\mathrm{Stringency}_{t-7}^2$",
+    "$\\mathrm{Stringency_{t-7}}$ * Social K"
+  ),
+  title = "Alternative Measures Social Capital Regression Results",
+  dep.var.labels = "Daily New Cases per Million",
+  header = FALSE
+)
 ```
 
 
