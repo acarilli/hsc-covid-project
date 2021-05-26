@@ -88,10 +88,10 @@ stargazer(
       index = "state",
       model = "within"
     ),
-  type = "html",
+  type = "latex",
   df = FALSE,
   covariate.labels = c(
-    "Stringency Lag",
+    "Stringency(-7)",
     "Social Capital",
     "Stringency Lag Sqrd",
     "Median Income",
@@ -105,8 +105,9 @@ stargazer(
     "Republican Governor",
     "Stringency Lag * Social Capital"
   ),
-  title = "Regression Results",
+  title = "Fixed Effects Regression Results",
   dep.var.labels = "Daily New Cases per Million",
+  # column.labels = c("$\\beta_{it}$", "$\\beta_t$", "$\\beta_t$", "$\\beta_t$")
   header = FALSE
 )
 ```
