@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/W32TeX) (preloaded format=pdflatex 2020.12.30)  26 MAY 2021 20:59
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/W32TeX) (preloaded format=pdflatex 2020.12.30)  26 MAY 2021 21:08
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -520,11 +520,6 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <7> on input line 80.
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <5> on input line 80.
-
-Overfull \hbox (40.32903pt too wide) in paragraph at lines 196--223
- [][] 
- []
-
 [1
 
 {c:/Users/tcari/AppData/Roaming/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdfte
@@ -538,7 +533,7 @@ LaTeX Warning: There were multiply-defined labels.
 Here is how much of TeX's memory you used:
  10349 strings out of 481364
  149148 string characters out of 5917579
- 457721 words of memory out of 5000000
+ 457724 words of memory out of 5000000
  27001 multiletter control sequences out of 15000+600000
  446985 words of font info for 64 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
@@ -558,7 +553,7 @@ mf-dist/fonts/type1/public/lm/lmr17.pfb><c:/Users/tcari/AppData/Roaming/TinyTeX
 TeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb><c:/Users/tcari/AppData/Roaming
 /TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb><c:/Users/tcari/AppData/Ro
 aming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy7.pfb>
-Output written on final-tables.pdf (4 pages, 150339 bytes).
+Output written on final-tables.pdf (4 pages, 150534 bytes).
 PDF statistics:
  93 PDF objects out of 1000 (max. 8388607)
  76 compressed objects within 1 object stream

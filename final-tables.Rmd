@@ -27,7 +27,7 @@ soc_cap_measures <- sc_names[c(14:17, 46:53)]
 
 # Table 2
 
-```{r table-2, results='asis', eval=TRUE}
+```{r table-2, results='asis', eval=FALSE}
 stargazer(
   df %>%
     plm(
@@ -114,7 +114,7 @@ stargazer(
 
 # Table 3
 
-```{r table-3, results='asis', eval=TRUE}
+```{r table-3, results='asis', eval=FALSE}
 stargazer(
   # df %>%
   #   plm(
@@ -160,7 +160,7 @@ stargazer(
 
 # Table 4
 
-```{r table-4, results='asis', eval=TRUE}
+```{r table-4, results='asis', eval=FALSE}
 table_3_models <- list()
 
 for (i in 1:4) {
@@ -205,4 +205,57 @@ stargazer(
 ```
 
 
+
+```{r des-stats}
+df %>%
+  select(
+    cases_new,
+    stringency_index,
+    median_household_income,
+    percent_adults_with_ba,
+    percent_in_fair_or_poor_health,
+    percent_black,
+    density,
+    percent_rural,
+    percent_65,
+    average_temperature,
+    state_level_index
+  ) %>%
+  pastecs::stat.desc() %>%
+  rownames_to_column("stat") %>%
+  filter(stat %in% c("nbr.val",
+                     "min",
+                     "max",
+                     "mean",
+                     "median",
+                     "std.dev")) %>%
+  pivot_longer(-stat) %>%
+  pivot_wider(names_from = "stat") %>%
+  select(-name) %>% 
+  mutate(row_names = c("New Cases", 
+                       "Stringency Index",
+                       "Median Household Income",
+                       "% Adults w/ Bachelor's",
+                       "% Fair or Poor Health",
+                       "% Black",
+                       "Pop. Density",
+                       "% Rural",
+                       "% > 65",
+                       "Average Temperature",
+                       "Social Capital Index")) %>% 
+  gt(rowname_col = "row_names") %>%
+  tab_header(title = "Descriptive Statistics") %>%
+  cols_label(
+    nbr.val = "N",
+    min = "Min",
+    max = "Max",
+    median = "Median",
+    mean = "Mean",
+    std.dev = glue::glue("Standard \n Deviation")
+  ) %>%
+  cols_align("center") %>% 
+  fmt_number(columns = c("mean","median"),
+             decimals = 2) %>% 
+  gt::as_latex()
+```
 
