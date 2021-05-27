@@ -11,6 +11,7 @@ knitr::opts_chunk$set(echo = FALSE, comment = NA,
 library(tidyverse)
 library(plm)
 library(stargazer)
+library(gt)
 df <- # data
   here::here("data", "covid_data_final.csv") %>% 
   read_csv() %>% 
@@ -23,11 +24,55 @@ sc_names <-
 soc_cap_measures <- sc_names[c(14:17, 46:53)]
 ```
 
+# Table 1
+
+```{r desc-stats, results='asis', eval=TRUE}
+df %>%
+  select(
+    cases_new,
+    stringency_index_lag,
+    state_level_index,
+    percent_adults_with_ba,
+    percent_in_fair_or_poor_health,
+    percent_black,
+    percent_rural,
+    percent_65,
+    average_temperature,
+    median_household_income,
+    density
+  ) %>%
+  as.data.frame() %>%
+  stargazer(
+    type = "latex",
+    summary.stat = c("n",
+                     "min",
+                     "max",
+                     "mean",
+                     "median",
+                     "sd"),
+    digits = 2,
+    covariate.labels = c(
+      "New Cases",
+      "$\\mathrm{Stringency_{t-7}}$",
+      "State Level Index",
+      "\\% Bachelor's",
+      "\\% Fair/Poor Health",
+      "\\% Black",
+      "\\% Rural",
+      "\\% > 65",
+      "Average Temperature",
+      "Median Income",
+      "Population Density"
+    ),
+    title = "Descriptive Statistics",
+    header = FALSE
+  )
+```
 
 
 # Table 2
 
-```{r table-2, results='asis', eval=FALSE}
+```{r table-2, results='asis', eval=TRUE}
 stargazer(
   df %>%
     plm(
@@ -107,14 +152,19 @@ stargazer(
   ),
   title = "Fixed Effects Regression Results",
   dep.var.labels = "Daily New Cases per Million",
-  column.labels = c("$\\mathrm{FE_{i,t}}$", "$\\mathrm{FE_t}$", "$\\mathrm{FE_t}$", "$\\mathrm{IVFE_t}$"),
+  column.labels = c(
+    "$\\mathrm{FE_{i,t}}$",
+    "$\\mathrm{FE_t}$",
+    "$\\mathrm{FE_t}$",
+    "$\\mathrm{IVFE_t}$"
+  ),
   header = FALSE
 )
 ```
 
 # Table 3
 
-```{r table-3, results='asis', eval=FALSE}
+```{r table-3, results='asis', eval=TRUE}
 stargazer(
   # df %>%
   #   plm(
@@ -160,7 +210,7 @@ stargazer(
 
 # Table 4
 
-```{r table-4, results='asis', eval=FALSE}
+```{r table-4, results='asis', eval=TRUE}
 table_3_models <- list()
 
 for (i in 1:4) {
@@ -206,56 +256,4 @@ stargazer(
 
 
 
-```{r des-stats}
-df %>%
-  select(
-    cases_new,
-    stringency_index,
-    median_household_income,
-    percent_adults_with_ba,
-    percent_in_fair_or_poor_health,
-    percent_black,
-    density,
-    percent_rural,
-    percent_65,
-    average_temperature,
-    state_level_index
-  ) %>%
-  pastecs::stat.desc() %>%
-  rownames_to_column("stat") %>%
-  filter(stat %in% c("nbr.val",
-                     "min",
-                     "max",
-                     "mean",
-                     "median",
-                     "std.dev")) %>%
-  pivot_longer(-stat) %>%
-  pivot_wider(names_from = "stat") %>%
-  select(-name) %>% 
-  mutate(row_names = c("New Cases", 
-                       "Stringency Index",
-                       "Median Household Income",
-                       "% Adults w/ Bachelor's",
-                       "% Fair or Poor Health",
-                       "% Black",
-                       "Pop. Density",
-                       "% Rural",
-                       "% > 65",
-                       "Average Temperature",
-                       "Social Capital Index")) %>% 
-  gt(rowname_col = "row_names") %>%
-  tab_header(title = "Descriptive Statistics") %>%
-  cols_label(
-    nbr.val = "N",
-    min = "Min",
-    max = "Max",
-    median = "Median",
-    mean = "Mean",
-    std.dev = glue::glue("Standard \n Deviation")
-  ) %>%
-  cols_align("center") %>% 
-  fmt_number(columns = c("mean","median"),
-             decimals = 2) %>% 
-  gt::as_latex()
-```
 
