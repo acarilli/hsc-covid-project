@@ -196,9 +196,10 @@ stargazer(
   dep.var.labels = "Daily New Cases per Million",
   header = FALSE,
   column.labels = c(
-    "Alesina La Ferrara",
+    "Penn State Index",
     "Putnam Index",
-    "Penn State Index"
+    "Alesina La Ferrara",
+    "Family Prosperity Index"
   )
 )
 ```
