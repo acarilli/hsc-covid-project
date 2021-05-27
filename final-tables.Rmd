@@ -192,14 +192,14 @@ stargazer(
     "$\\mathrm{Stringency}_{t-7}^2$",
     "$\\mathrm{Stringency_{t-7}}$ * Social K"
   ),
-  title = "Alternative Measures Social Capital Regression Results",
+  title = "Alternative Measures of Social Capital Regression Results",
   dep.var.labels = "Daily New Cases per Million",
   header = FALSE,
   column.labels = c(
-    "Penn State Index",
-    "Putnam Index",
+    "Penn State",
+    "Putnam",
     "Alesina La Ferrara",
-    "Family Prosperity Index"
+    "Family Prosperity"
   )
 )
 ```
