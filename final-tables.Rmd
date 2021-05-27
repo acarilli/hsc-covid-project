@@ -185,7 +185,7 @@ names(table_3_models) <- soc_cap_measures[1:4]
 stargazer(
   table_3_models,
   type = "latex",
-  model.names = TRUE,
+  model.names = FALSE,
   df = FALSE,
   covariate.labels = c(
     "$\\mathrm{Stringency_{t-7}}$",
@@ -201,7 +201,6 @@ stargazer(
     "Alesina La Ferrara",
     "Family Prosperity Index"
   ),
-  model.names = FALSE
 )
 ```
 
