@@ -194,7 +194,12 @@ stargazer(
   ),
   title = "Alternative Measures Social Capital Regression Results",
   dep.var.labels = "Daily New Cases per Million",
-  header = FALSE
+  header = FALSE,
+  column.labels = c(
+    "Alesina La Ferrara",
+    "Putnam Index",
+    "Penn State Index"
+  )
 )
 ```
 
