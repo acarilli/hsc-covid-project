@@ -27,7 +27,7 @@ soc_cap_measures <- sc_names[c(14:17, 46:53)]
 
 # Table 2
 
-```{r table-2, results='asis', eval=FALSE}
+```{r table-2, results='asis', eval=TRUE}
 stargazer(
   df %>%
     plm(
@@ -114,7 +114,7 @@ stargazer(
 
 # Table 3
 
-```{r table-3, results='asis', eval=FALSE}
+```{r table-3, results='asis', eval=TRUE}
 stargazer(
   # df %>%
   #   plm(
@@ -200,7 +200,7 @@ stargazer(
     "Putnam Index",
     "Alesina La Ferrara",
     "Family Prosperity Index"
-  ),
+  )
 )
 ```
 
