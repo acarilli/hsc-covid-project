@@ -254,12 +254,29 @@ stargazer(
 )
 ```
 
+# Table 5
+
 ```{r table-5, eval=TRUE, results='asis'}
+df %>%
+    plm::plm(
+      cases_new ~ stringency_index_lag * state_level_index +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "twoways",
+      index = "state",
+      method = "within"
+    ) %>% 
+  broom::tidy() %>% 
+  pull(estimate) ->
+  coefs
+
+
 sc_index <- c(-2, -1, 0, 1, 2)
 stringency_index <-
   df %>%
   summarize(quant = quantile(stringency_index_lag, na.rm = TRUE)) %>%
-  filter(between(quant, 1, 87)) %>% 
+  # filter(between(quant, 1, 87)) %>% 
+  filter(quant > 1 & quant < 87) %>% 
   pull(quant)
 
 new <- tibble()
@@ -271,6 +288,8 @@ for (i in seq_along(sc_index)) {
       coefs[3] * stringency_index[j] * sc_index[i]
   }
 }
+
+
 
 new %>%
   select(q1 = "...1",
@@ -286,34 +305,53 @@ new %>%
   arrange(desc(name)) %>%
   mutate(name = c("High",
                   "Average",
-                  "Low")) %>%
-  gt(rowname_col = "name") %>%
-  tab_style(style = cell_text(weight = "bold"),
-            locations = cells_body(columns = c(2, 6),
-                                   rows = c(1, 3))) %>%
-  cols_label(
-    # name = "Prevention Level",
-    `2` = "Strong",
-    `1` = "Positive",
-    `0` = "Average",
-    `-1` = "Negative",
-    `-2` = "Weak"
-  ) %>%
-  tab_spanner(label = "Level of Social Capital",
-              columns = 2:6) %>%
-  tab_stubhead(label = "Desire for Prevention") %>%
-  tab_footnote(
-    footnote = "Strong and Weak Social Capital are 
-               2 standard deviations above and below the mean level.",
-    locations = cells_column_spanners(everything())) %>%
-  tab_footnote(
-    footnote = "High, Average, and Low are measured at
-               the first, second, and third quartiles of the Stringency Index",
-    locations = cells_stubhead()
-  ) %>% 
-  gt::as_latex()
+                  "Low"))  %>%
+  rename("Prevention Level" = name,
+       "Strong" = `2`, 
+       "Positive" = `1`,
+       "Average" = `0`,
+       "Negative" = `-1`,
+       "Weak" = `-2`) %>% 
+  as.data.frame() %>%
+  stargazer(
+    summary = FALSE,
+    header = FALSE,
+    digits = 0,
+    type = "latex",
+    rownames = FALSE,
+    column.labels = "Level of Social Capital",
+    column.separate = c(1,4)
+  )
   
+#   gt(rowname_col = "name") %>%
+#   tab_style(style = cell_text(weight = "bold"),
+#             locations = cells_body(columns = c(2, 6),
+#                                    rows = c(1, 3))) %>%
+#   cols_label(
+#     # name = "Prevention Level",
+#     `2` = "Strong",
+#     `1` = "Positive",
+#     `0` = "Average",
+#     `-1` = "Negative",
+#     `-2` = "Weak"
+#   ) %>%
+#   tab_spanner(label = "Level of Social Capital",
+#               columns = 2:6) %>%
+#   tab_stubhead(label = "Desire for Prevention") %>%
+#   tab_footnote(
+#     footnote = "Strong and Weak Social Capital are 
+#                2 standard deviations above and below the mean level.",
+#     locations = cells_column_spanners(everything())) %>%
+#   tab_footnote(
+#     footnote = "High, Average, and Low are measured at
+#                the first, second, and third quartiles of the Stringency Index",
+#     locations = cells_stubhead()
+#   ) %>% 
+#   huxtable::as_huxtable() %>% 
+#   huxtable::to_latex()
+#   
   
+
 ```
 
 
