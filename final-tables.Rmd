@@ -200,7 +200,8 @@ stargazer(
     "Putnam Index",
     "Alesina La Ferrara",
     "Family Prosperity Index"
-  )
+  ),
+  model.names = FALSE
 )
 ```
 
