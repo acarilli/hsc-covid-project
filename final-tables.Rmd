@@ -324,7 +324,7 @@ new %>%
     values = c("Strong and Weak Social Capital are 2 standard deviations above and below the mean level.",
                "High, Average, and Low are measured at the first, second, and third quartiles of the Stringency Index.")
   ) %>% 
-  flextable::fontsize(size = 9, part = "footer")
+  flextable::fontsize(size = 9, part = "footer") 
   
 
 ```
