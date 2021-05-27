@@ -255,6 +255,23 @@ stargazer(
 ```
 
 ```{r table-5, eval=TRUE, results='asis'}
+sc_index <- c(-2, -1, 0, 1, 2)
+stringency_index <-
+  df %>%
+  summarize(quant = quantile(stringency_index_lag, na.rm = TRUE)) %>%
+  filter(between(quant, 1, 87)) %>% 
+  pull(quant)
+
+new <- tibble()
+
+for (i in seq_along(sc_index)) {
+  for (j in seq_along(stringency_index)) {
+    new[i, j] <- coefs[1] * stringency_index[j] +
+      coefs[2] * stringency_index[j] ^ 2 +
+      coefs[3] * stringency_index[j] * sc_index[i]
+  }
+}
+
 new %>%
   select(q1 = "...1",
          q2 = "...2",
