@@ -312,16 +312,21 @@ new %>%
        "Average" = `0`,
        "Negative" = `-1`,
        "Weak" = `-2`) %>% 
-  as.data.frame() %>%
-  stargazer(
-    summary = FALSE,
-    header = FALSE,
-    digits = 0,
-    type = "latex",
-    rownames = FALSE,
-    column.labels = "Level of Social Capital",
-    column.separate = c(1,4)
-  )
+  flextable::flextable() %>% 
+  flextable::add_header_row(colwidths = c(1,5),
+                            values = c("", "Level of Social Capital")) %>% 
+  flextable::set_caption("New Cases Avoided")
+  
+  # as.data.frame() %>%
+  # stargazer(
+  #   summary = FALSE,
+  #   header = FALSE,
+  #   digits = 0,
+  #   type = "latex",
+  #   rownames = FALSE,
+  #   column.labels = "Level of Social Capital",
+  #   column.separate = c(1,4)
+  # )
   
 #   gt(rowname_col = "name") %>%
 #   tab_style(style = cell_text(weight = "bold"),
