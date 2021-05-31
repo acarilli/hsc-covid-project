@@ -110,29 +110,29 @@ stargazer(
       index = "state",
       model = "within"
     ),
-  df %>%
-    plm(
-      cases_new ~ stringency_index_lag * state_level_index  +
-        I(stringency_index_lag ^ 2) +
-        average_temperature +
-        governor_political_affiliation +
-        percent_in_fair_or_poor_health |
-        median_household_income +
-        percent_adults_with_ba +
-        percent_black +
-        density +
-        percent_rural +
-        percent_65 +
-        average_temperature +
-        governor_political_affiliation +
-        percent_in_fair_or_poor_health +
-        stringency_index_lag +
-        I(stringency_index_lag) ^ 2,
-      data = .,
-      effect = "time",
-      index = "state",
-      model = "within"
-    ),
+  # df %>%
+  #   plm(
+  #     cases_new ~ stringency_index_lag * state_level_index  +
+  #       I(stringency_index_lag ^ 2) +
+  #       average_temperature +
+  #       governor_political_affiliation +
+  #       percent_in_fair_or_poor_health |
+  #       median_household_income +
+  #       percent_adults_with_ba +
+  #       percent_black +
+  #       density +
+  #       percent_rural +
+  #       percent_65 +
+  #       average_temperature +
+  #       governor_political_affiliation +
+  #       percent_in_fair_or_poor_health +
+  #       stringency_index_lag +
+  #       I(stringency_index_lag) ^ 2,
+  #     data = .,
+  #     effect = "time",
+  #     index = "state",
+  #     model = "within"
+  #   ),
   type = "latex",
   df = FALSE,
   covariate.labels = c(
@@ -153,10 +153,10 @@ stargazer(
   title = "Fixed Effects Regression Results",
   dep.var.labels = "Daily New Cases per Million",
   column.labels = c(
+    "$\\mathrm{FE_{t}}$",
     "$\\mathrm{FE_{i,t}}$",
-    "$\\mathrm{FE_t}$",
-    "$\\mathrm{FE_t}$",
-    "$\\mathrm{IVFE_t}$"
+    "$\\mathrm{FE_t}$"
+    # "$\\mathrm{IVFE_t}$"
   ),
   header = FALSE
 )
