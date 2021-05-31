@@ -266,8 +266,27 @@ df %>%
       effect = "twoways",
       index = "state",
       method = "within"
-    ) %>% 
-  broom::tidy() %>% 
+    ) %>%
+# use equation 3 for table 5.
+# df %>%
+#     plm(
+#       cases_new ~ stringency_index_lag * state_level_index +
+#         I(stringency_index_lag ^ 2) +
+#         median_household_income +
+#         percent_adults_with_ba +
+#         percent_in_fair_or_poor_health +
+#         percent_black +
+#         density +
+#         percent_rural +
+#         percent_65 +
+#         average_temperature +
+#         governor_political_affiliation,
+#       data = .,
+#       effect = "time",
+#       index = "state",
+#       model = "within"
+#     ) %>%   
+  broom::tidy() %>%
   pull(estimate) ->
   coefs
 
@@ -289,6 +308,24 @@ for (i in seq_along(sc_index)) {
       coefs[3] * stringency_index[j] * sc_index[i]
   }
 }
+
+# for (i in seq_along(sc_index)) {
+#   for (j in seq_along(stringency_index)) {
+#     new[i, j] <- coefs[1] * stringency_index[j] +
+#       coefs[2] * sc_index[j] +
+#       coefs[3] * stringency_index[j] ^ 2 +
+#       coefs[4] * median(df$median_household_income, na.rm = TRUE) +
+#       coefs[5] * median(df$percent_adults_with_ba, na.rm = TRUE) +
+#       coefs[6] * median(df$percent_in_fair_or_poor_health, na.rm = TRUE) +
+#       coefs[7] *  median(df$percent_black, na.rm = TRUE) +
+#       coefs[8] *  median(df$density, na.rm = TRUE) +
+#       coefs[9] *  median(df$percent_rural, na.rm = TRUE) +
+#       coefs[10] *  median(df$percent_65, na.rm = TRUE) +
+#       coefs[11] *  median(df$average_temperature, na.rm = TRUE) +
+#       coefs[12] *  0 +
+#       coefs[13] * stringency_index[j] * sc_index[i]
+#   }
+# }
 
 
 flextable::set_flextable_defaults(text.align = "left", fonts_ignore = TRUE)
