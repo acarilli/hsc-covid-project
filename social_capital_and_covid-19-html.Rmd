@@ -27,11 +27,14 @@ library(tidyverse)
 library(plm)
 library(bibtex)
 library(stargazer)
-library(gt)
 df <- # data
   here::here("data", "covid_data_final.csv") %>% 
   read_csv() %>% 
   filter(date >= "2020-03-01") #filter data 
+sc_names <- 
+  df %>% 
+  names()
+soc_cap_measures <- sc_names[c(14:17, 46:53)]
 ```
 
 # Introduction
