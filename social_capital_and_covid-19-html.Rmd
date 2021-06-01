@@ -273,6 +273,83 @@ To see whether particular components of social capital are more or less relevant
 
 [Insert Table 3 Here]
 
+```{r table-3, results='asis', eval=FALSE}
+df %>%
+  plm::plm(
+    cases_new ~ stringency_index_lag * state_level_index +
+      I(stringency_index_lag ^ 2),
+    data = .,
+    effect = "twoways",
+    index = "state",
+    method = "within"
+  ) %>%
+  broom::tidy() %>%
+  pull(estimate) ->
+  coefs
+
+
+sc_index <- c(-2, -1, 0, 1, 2)
+stringency_index <-
+  df %>%
+  summarize(quant = quantile(stringency_index_lag, na.rm = TRUE)) %>%
+  # filter(between(quant, 1, 87)) %>%
+  filter(quant > 1 & quant < 87) %>%
+  pull(quant)
+
+new <- tibble()
+
+for (i in seq_along(sc_index)) {
+  for (j in seq_along(stringency_index)) {
+    new[i, j] <- coefs[1] * stringency_index[j] +
+      coefs[2] * stringency_index[j] ^ 2 +
+      coefs[3] * stringency_index[j] * sc_index[i]
+  }
+}
+
+
+flextable::set_flextable_defaults(text.align = "left", fonts_ignore = TRUE)
+
+new %>%
+  select(q1 = "...1",
+         q2 = "...2",
+         q3 = "...3") %>%
+  mutate(sc_index = sc_index) %>%
+  relocate(sc_index) %>%
+  arrange(desc(sc_index)) %>%
+  pivot_longer(-sc_index) %>%
+  pivot_wider(values_from = value,
+              names_from = sc_index) %>%
+  # select(1 , 3:7) %>%
+  arrange(desc(name)) %>%
+  mutate(name = c("High",
+                  "Average",
+                  "Low"))  %>%
+  rename(
+    "Desire for Prevention" = name,
+    "Strong" = `2`,
+    "Positive" = `1`,
+    "Average" = `0`,
+    "Negative" = `-1`,
+    "Weak" = `-2`
+  ) %>%
+  flextable::flextable() %>%
+  flextable::add_header_row(values = c("", "Level of Social Capital"),
+                            colwidths = c(2, 4)) %>%
+  flextable::align_text_col(align = "center", header = FALSE) %>%
+  flextable::set_caption("New Cases per Million Avoided") %>%
+  flextable::bold(i = c(1, 3), j = c(2, 6)) %>%
+  flextable::hline_top(part = "header") %>%
+  flextable::add_footer_lines(
+    values = c(
+      "Strong and Weak Social Capital are 2 standard deviations above and below the mean level.",
+      "High, Average, and Low are measured at the first, second, and third quartiles of the Stringency Index."
+    )
+  ) %>%
+  flextable::fontsize(size = 9, part = "footer") 
+
+```
+
+
 Table 4 re-estimates equation 2 of Table 2 with alternative measures of social capital from the existing literature. These measures include: the SCP version of Penn State Index (2014), the Putnam Index (2000), the Alesina & La Ferrara social capital group (2000), and the Family Prosperity index reported in columns 2, 3, 4, respectively. All of these measures were taken from the JEC Social Capital Project. Our main results are consistent in sign and statistical significance across these measures of social capital.
 
 [Insert Table 4 Here]
