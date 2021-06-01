@@ -354,6 +354,51 @@ Table 4 re-estimates equation 2 of Table 2 with alternative measures of social c
 
 [Insert Table 4 Here]
 
+```{r table-4, results='asis', eval=FALSE}
+table_3_models <- list()
+
+for (i in 1:4) {
+  # for(i in 1:1)  {
+  # sc_i <- soc_cap_measures[i]
+  
+  table_3_models[[i]] <-
+    df %>%
+    plm(
+      cases_new ~ stringency_index_lag * get(soc_cap_measures[i]) +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "twoways",
+      index = "state",
+      model = "within"
+    ) 
+}
+
+names(table_3_models) <- soc_cap_measures[1:4]
+
+
+stargazer(
+  table_3_models,
+  type = "latex",
+  model.names = FALSE,
+  df = FALSE,
+  covariate.labels = c(
+    "$\\mathrm{Stringency_{t-7}}$",
+    "$\\mathrm{Stringency}_{t-7}^2$",
+    "$\\mathrm{Stringency_{t-7}}$ * Social K"
+  ),
+  title = "Alternative Measures of Social Capital Regression Results",
+  dep.var.labels = "Daily New Cases per Million",
+  header = FALSE,
+  column.labels = c(
+    "Penn State",
+    "Putnam",
+    "Alesina La Ferrara",
+    "Family Prosperity"
+  )
+)
+```
+
+
 # Discussion and Conclusion
 
 Our framework advances literatures in economics and in public health by formally analyzing the interaction between formal and informal rules related to infectious diseases in the context of COVID-19 in the United States. We show that people stifle the spread of COVID-19 when they value prevention and when they have stronger social capital. Table 5---a reproduction of the framework in Figure 1 but with predicted values of the two-way fixed effects specification from Column 2 of Table 2---shows a simple way to understand our results. The bold numbers of Table 5 correspond to Quadrants I, II, III, and IV of Figure 1.
