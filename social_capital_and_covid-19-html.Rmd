@@ -165,69 +165,92 @@ Table 2 presents results for the basic model and subsequent specifications for o
 
 [Insert Table 2 Here]
 
-```{r table-2, results='asis'}
-model_twoways <- 
+```{r table-2, results='asis', eval=FALSE}
+stargazer(
   df %>%
-  plm(
-    cases_new ~ stringency_index_lag * state_level_dummy +
-      I(stringency_index_lag ^ 2),
-    data = .,
-    effect = "twoways",
-    index = "state",
-    model = "within"
-  )
-
-model_oneway_no_controls <- 
+    plm(
+      cases_new ~ stringency_index_lag * state_level_index +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "time",
+      index = "state",
+      model = "within"
+    ),
   df %>%
-  plm(
-    cases_new ~ stringency_index_lag * state_level_dummy +
-      I(stringency_index_lag ^ 2),
-    data = .,
-    effect = "time",
-    index = "state",
-    model = "within"
-  )
-  
-model_oneway_with_controls <- 
+    plm(
+      cases_new ~ stringency_index_lag * state_level_index +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "twoways",
+      index = "state",
+      method = "within"
+    ),
   df %>%
-  plm(
-    cases_new ~ stringency_index_lag * state_level_dummy +
-      I(stringency_index_lag ^ 2) +
-      median_household_income +
-      percent_adults_with_ba +
-      percent_in_fair_or_poor_health +
-      percent_black +
-      density +
-      percent_rural +
-      percent_65 +
-      average_temperature +
-      governor_political_affiliation,
-    data = .,
-    effect = "time",
-    index = "state",
-    model = "within"
-  )
-
-stargazer(model_twoways, model_oneway_no_controls, model_oneway_with_controls,
+    plm(
+      cases_new ~ stringency_index_lag * state_level_index +
+        I(stringency_index_lag ^ 2) +
+        median_household_income +
+        percent_adults_with_ba +
+        percent_in_fair_or_poor_health +
+        percent_black +
+        density +
+        percent_rural +
+        percent_65 +
+        average_temperature +
+        governor_political_affiliation,
+      data = .,
+      effect = "time",
+      index = "state",
+      model = "within"
+    ),
+  # df %>%
+  #   plm(
+  #     cases_new ~ stringency_index_lag * state_level_index  +
+  #       I(stringency_index_lag ^ 2) +
+  #       average_temperature +
+  #       governor_political_affiliation +
+  #       percent_in_fair_or_poor_health |
+  #       median_household_income +
+  #       percent_adults_with_ba +
+  #       percent_black +
+  #       density +
+  #       percent_rural +
+  #       percent_65 +
+  #       average_temperature +
+  #       governor_political_affiliation +
+  #       percent_in_fair_or_poor_health +
+  #       stringency_index_lag +
+  #       I(stringency_index_lag) ^ 2,
+  #     data = .,
+  #     effect = "time",
+  #     index = "state",
+  #     model = "within"
+  #   ),
   type = "latex",
   df = FALSE,
   covariate.labels = c(
-    "Stringency Index",
-    "Social Capital Dummy",
-    "Stringency Index squared",
-    "Median Household Income",
-    "Percent of Adults with Bachelor's Degree",
-    "Percent of Adults in Fair or Poor Health",
-    "Percent of Population that is Black",
+    "$\\mathrm{Stringency_{t-7}}$",
+    "Social K",
+    "$\\mathrm{Stringency}_{t-7}^2$",
+    "Median Income",
+    "\\% Bachelor's",
+    "\\% Fair/Poor Health",
+    "\\% Black",
     "Population Density",
-    "Percent of Population in Rural Areas",
-    "Percent of Population greater than 65 years old",
+    "\\% Rural",
+    "\\% > 65",
     "Average Temperature",
     "Republican Governor",
-    "Stringency Index * Social Capital Dummy"
+    "$\\mathrm{Stringency_{t-7}}$ * Social K"
   ),
-  title = "Regression Results",
+  title = "Fixed Effects Regression Results",
   dep.var.labels = "Daily New Cases per Million",
+  column.labels = c(
+    "$\\mathrm{FE_{t}}$",
+    "$\\mathrm{FE_{i,t}}$",
+    "$\\mathrm{FE_t}$"
+    # "$\\mathrm{IVFE_t}$"
+  ),
   header = FALSE
 )
 ```
