@@ -3,8 +3,8 @@ title: "Covid Alone"
 subtitle: The Complementarity between Social Capital and Formal Public Health Rules
   in the United States
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
   word_document: default
 bibliography: covid-references.bib
 abstract: Social capital is a well-researched aspect of health outcomes, and scholars
