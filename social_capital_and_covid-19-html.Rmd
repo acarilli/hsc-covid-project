@@ -88,7 +88,7 @@ Figure 1 depicts a way to visualize these conditions. The rows characterize grou
 | **Low Value on Prevention**  | | III - Social capital raises prevalence rates | | \| IV - Social capital raises prevalence rates less |
 +------------------------------+------------------------------------------------+-------------------------------------------------------+
 
-: Figure 1. A Framework on Social Capital and Disease Prevention
+: A Framework on Social Capital and Disease Prevention
 
 Thus, the effect social capital has on prevalence rates varies by quadrant---and the interactions between social capital and the value people place on prevention. For any given level of social capital, groups that place a higher value on prevention (Quadrants I and II) should see lower prevalence rates relative to groups with a lower desire for prevention (Quadrants III and IV). Holding the value people have for prevention constant, groups with higher social capital (Quadrants I and III) should see higher prevalence rates relative to groups with lower social capital (Quadrants II and IV).
 
