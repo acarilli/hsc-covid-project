@@ -119,7 +119,7 @@ The data for our empirical analysis comes from a number of sources. Our dependen
 
 Our sample of state-level data supports the following characterization. The mean household income was \$56,031; the mean percent of people with a B.A. degree was 30%; the mean percent of people who reported they were in poor or fair health was about 16%; the mean percent of Black or African American people was less than 11%; a mean population density of about 407 people per square mile; and a mean rural population of about 26%. Table 1 presents standard descriptive statistics for our sample of state-level data.
 
-```{r table-1, results='asis', eval=FALSE}
+```{r table-1, results='asis', eval=TRUE}
 df %>%
   select(
     cases_new,
@@ -164,7 +164,7 @@ df %>%
 
 Table 2 presents results for the basic model and subsequent specifications for our balanced panel of daily data from March 1, 2020 to May 1, 2021 across fifty states and the District of Columbia. Column 1 estimates equation 1 using a within model that includes period fixed effects, whereas column 2 includes both cross-sectional and period fixed effects to account for cross-sectional differences between states.
 
-```{r table-2, results='asis', eval=FALSE}
+```{r table-2, results='asis', eval=TRUE}
 stargazer(
   df %>%
     plm(
@@ -277,7 +277,7 @@ To see whether particular components of social capital are more or less relevant
 
 [Insert Table 3 Here]
 
-```{r table-3, results='asis', eval=FALSE}
+```{r table-3, results='asis', eval=TRUE}
 df %>%
   plm::plm(
     cases_new ~ stringency_index_lag * state_level_index +
@@ -357,7 +357,7 @@ Table 4 re-estimates equation 2 of Table 2 with alternative measures of social c
 
 [Insert Table 4 Here]
 
-```{r table-4, results='asis', eval=FALSE}
+```{r table-4, results='asis', eval=TRUE}
 table_3_models <- list()
 
 for (i in 1:4) {
