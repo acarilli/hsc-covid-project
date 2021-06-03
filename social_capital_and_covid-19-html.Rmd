@@ -3,8 +3,8 @@ title: "Covid Alone"
 subtitle: The Complementarity between Social Capital and Formal Public Health Rules
   in the United States
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
   word_document: default
 bibliography: covid-references.bib
 abstract: Social capital is a well-researched aspect of health outcomes, and scholars
@@ -119,7 +119,7 @@ The data for our empirical analysis comes from a number of sources. Our dependen
 
 Our sample of state-level data supports the following characterization. The mean household income was \$56,031; the mean percent of people with a B.A. degree was 30%; the mean percent of people who reported they were in poor or fair health was about 16%; the mean percent of Black or African American people was less than 11%; a mean population density of about 407 people per square mile; and a mean rural population of about 26%. Table 2 presents standard descriptive statistics for our sample of state-level data.
 
-```{r table-2, results='asis', eval=FALSE}
+```{r table-2, results='asis', eval=TRUE}
 df %>%
   select(
     cases_new,
@@ -164,7 +164,7 @@ df %>%
 
 Table 3 presents results for the basic model and subsequent specifications for our balanced panel of daily data from March 1, 2020 to May 1, 2021 across fifty states and the District of Columbia. Column 1 estimates equation 1 using a within model that includes period fixed effects, whereas column 2 includes both cross-sectional and period fixed effects to account for cross-sectional differences between states.
 
-```{r table-3, results='asis', eval=FALSE}
+```{r table-3, results='asis', eval=TRUE}
 stargazer(
   df %>%
     plm(
@@ -270,7 +270,7 @@ The sign, magnitude, and statistical significance of our main variables of inter
 
 To clarify the meaning of our results, Table 4 uses specification 2 of Table 3---our preferred specification---to show by how much new COVID-19 cases change given a state has a high or low desire for prevention---measured at the first, second, and third quartiles---and whether a state has a strong or weak level of social capital---measured at the mean and one and two standard deviations above and below the mean. Once again Table 4 supports our propositions, especially 1 and 3.^[Specification 2 drops the social capital measure as it does not vary over time.] States with a higher value for prevention experienced a larger reduction in new cases; states with a higher value for prevention *and* stronger social capital experienced an even larger reduction in new cases. That is, states with a high value of prevention and a strong level of social capital reduce new daily cases by 210 per million. That is, given the estimated coefficients in specification 2 of Table 3 and assuming a state places a high value on COVID-19 prevention and a strong level of social capital, they experienced 210 fewer new, daily COVID-19 cases. Similarly, states with the lowest value on COVID-19 prevention and the weakest level of social capital experienced 68.9 fewer new COVID-19 cases.
 
-```{r table-4, results='asis', eval=FALSE}
+```{r table-4, results='asis', eval=TRUE}
 df %>%
   plm::plm(
     cases_new ~ stringency_index_lag * state_level_index +
@@ -397,7 +397,7 @@ stargazer(
 
 Table 6 re-estimates equation 2 of Table 3 with alternative measures of social capital from the existing literature. These measures include: the SCP version of Penn State Index (2014), the Putnam Index (2000), the Alesina & La Ferrara social capital group (2000), and the Family Prosperity index reported in columns 2, 3, 4, respectively. All of these measures were taken from the JEC Social Capital Project. Our main results are consistent in sign and statistical significance across these measures of social capital.
 
-```{r table-6, results='asis', eval=FALSE}
+```{r table-6, results='asis', eval=TRUE}
 table_3_models <- list()
 
 for (i in 1:4) {
