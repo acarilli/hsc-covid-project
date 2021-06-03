@@ -330,6 +330,25 @@ for (i in seq_along(sc_index)) {
 
 flextable::set_flextable_defaults(text.align = "left", fonts_ignore = TRUE)
 
+ %>% 
+  flextable::flextable() %>% 
+  flextable::add_header_row(values = c("", "Level of Social Capital"),
+                            colwidths = c(2, 4)) %>%
+  flextable::align_text_col(align = "center", header = FALSE) %>% 
+  flextable::set_caption("New Cases per Million Avoided") %>% 
+  flextable::bold(i = c(1,3), j = c(2,6)) %>% 
+  flextable::hline_top(part = "header") %>% 
+  flextable::add_footer_lines(
+    values = c("Strong and Weak Social Capital are 2 standard deviations above and below the mean level.",
+               "High, Average, and Low are measured at the first, second, and third quartiles of the Stringency Index.")
+  ) %>% 
+  flextable::fontsize(size = 9, part = "footer") 
+  
+
+```
+
+
+```{r}
 new %>%
   select(q1 = "...1",
          q2 = "...2",
@@ -351,20 +370,6 @@ new %>%
        "Average" = `0`,
        "Negative" = `-1`,
        "Weak" = `-2`) %>% 
-  flextable::flextable() %>% 
-  flextable::add_header_row(values = c("", "Level of Social Capital"),
-                            colwidths = c(2, 4)) %>%
-  flextable::align_text_col(align = "center", header = FALSE) %>% 
-  flextable::set_caption("New Cases per Million Avoided") %>% 
-  flextable::bold(i = c(1,3), j = c(2,6)) %>% 
-  flextable::hline_top(part = "header") %>% 
-  flextable::add_footer_lines(
-    values = c("Strong and Weak Social Capital are 2 standard deviations above and below the mean level.",
-               "High, Average, and Low are measured at the first, second, and third quartiles of the Stringency Index.")
-  ) %>% 
-  flextable::fontsize(size = 9, part = "footer") 
-  
-
+  mutate(across(Strong:Weak, ~ round(.x + 128.6353)))
 ```
-
 
