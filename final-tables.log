@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.5.26)  1 JUN 2021 12:12
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.5.26)  3 JUN 2021 13:38
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -666,7 +666,12 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 [1
 
 {c:/Users/TCarilli/AppData/Roaming/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pd
-ftex.map}] [2] [3] [4] (./final-tables.aux)
+ftex.map}] [2] [3]
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 3
+27.
+(c:/Users/TCarilli/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
+File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+) [4] (./final-tables.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
@@ -674,13 +679,13 @@ Package rerunfilecheck Info: File `final-tables.out' has not changed.
 (rerunfilecheck)             Checksum: 9A6121C7707D58681922DF1D5015BA2C;410.
  ) 
 Here is how much of TeX's memory you used:
- 10356 strings out of 480714
- 152549 string characters out of 5901596
+ 10399 strings out of 480714
+ 153269 string characters out of 5901596
  494671 words of memory out of 5000000
- 27622 multiletter control sequences out of 15000+600000
- 455979 words of font info for 67 fonts, out of 8000000 for 9000
+ 27661 multiletter control sequences out of 15000+600000
+ 456298 words of font info for 68 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 60i,12n,66p,1198b,428s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 60i,12n,66p,1197b,428s stack positions out of 5000i,500n,10000p,200000b,80000s
 {c:/Users/TCarilli/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-e
 c.enc}{c:/Users/TCarilli/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/
 lm-mathit.enc}{c:/Users/TCarilli/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/d
@@ -697,11 +702,12 @@ li/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb><c:/Users
 fb><c:/Users/TCarilli/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/
 lmri10.pfb><c:/Users/TCarilli/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/pu
 blic/lm/lmsy10.pfb><c:/Users/TCarilli/AppData/Roaming/TinyTeX/texmf-dist/fonts/
-type1/public/lm/lmsy7.pfb>
-Output written on final-tables.pdf (4 pages, 187738 bytes).
+type1/public/lm/lmsy7.pfb><c:/Users/TCarilli/AppData/Roaming/TinyTeX/texmf-dist
+/fonts/type1/public/lm/lmtt10.pfb>
+Output written on final-tables.pdf (4 pages, 212283 bytes).
 PDF statistics:
- 110 PDF objects out of 1000 (max. 8388607)
- 92 compressed objects within 1 object stream
+ 114 PDF objects out of 1000 (max. 8388607)
+ 95 compressed objects within 1 object stream
  20 named destinations out of 1000 (max. 500000)
  41 words of extra memory for PDF output out of 10000 (max. 10000000)
 
