@@ -329,8 +329,28 @@ for (i in seq_along(sc_index)) {
 
 
 flextable::set_flextable_defaults(text.align = "left", fonts_ignore = TRUE)
-
- %>% 
+new %>%
+  select(q1 = "...1",
+         q2 = "...2",
+         q3 = "...3") %>%
+  mutate(sc_index = sc_index) %>%
+  relocate(sc_index) %>%
+  arrange(desc(sc_index)) %>%
+  pivot_longer(-sc_index) %>%
+  pivot_wider(values_from = value,
+              names_from = sc_index) %>%
+  # select(1 , 3:7) %>%
+  arrange(desc(name)) %>%
+  mutate(name = c("High",
+                  "Average",
+                  "Low"))  %>%
+  rename("Desire for Prevention" = name,
+       "Strong" = `2`, 
+       "Positive" = `1`,
+       "Average" = `0`,
+       "Negative" = `-1`,
+       "Weak" = `-2`) %>% 
+  mutate(across(Strong:Weak, ~ round(.x + 128.6353))) %>% 
   flextable::flextable() %>% 
   flextable::add_header_row(values = c("", "Level of Social Capital"),
                             colwidths = c(2, 4)) %>%
