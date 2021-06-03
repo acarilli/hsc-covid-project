@@ -158,7 +158,8 @@ df %>%
       "Population Density"
     ),
     title = "Descriptive Statistics",
-    header = FALSE
+    header = FALSE,
+    no.space = TRUE
   )
 ```
 
@@ -250,7 +251,8 @@ stargazer(
     "$\\mathrm{FE_t}$"
     # "$\\mathrm{IVFE_t}$"
   ),
-  header = FALSE
+  header = FALSE,
+  no.space = TRUE
 )
 ```
 
@@ -394,7 +396,8 @@ stargazer(
   ),
   title = "Disaggregated Social Capital Regression Results",
   dep.var.labels = "Daily New Cases per Million",
-  header = FALSE
+  header = FALSE, 
+  no.space = TRUE
 )
 ```
 
@@ -440,7 +443,8 @@ stargazer(
     "Putnam",
     "Alesina La Ferrara",
     "Family Prosperity"
-  )
+  ),
+  no.space = TRUE
 )
 ```
 
