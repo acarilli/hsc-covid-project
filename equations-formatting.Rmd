@@ -1,0 +1,36 @@
+---
+title: "equations"
+author: "Carilli"
+date: "12/31/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+The first equation
+
+\begin{align}
+\mathit{New Cases_{i,t}} = \beta_0 + \beta_1\mathit{Stringency}_{i,t-7} +\beta_2\mathit{Stringency}_{i,t-7}^{2} +\beta_3\left(\mathit{Sringency_{i,t-7}} \times \mathit{SocialCapital_{i,t}}\right) + \epsilon_{i,t}
+\end{align}
+
+The second equation
+
+\begin{align}
+\mathit{New Cases_{t}} = \beta_0 &+ \beta_1\mathit{Stringency}_{t-7}
++\beta_2\mathit{Stringency}_{t-7}^{2} 
++\beta_3\mathit{SocialCaptial_{t}} \notag \\
+&+\beta_4\left(\mathit{Stringency_{t-7}} \times \mathit{SocialCapital_{t}}\right) + \epsilon_{t}
+\end{align}
+
+the third equation
+
+\begin{align}
+\mathit{New Cases_{t}} = \beta_0 &+ \beta_1\mathit{Stringency}_{t-7}
++\beta_2\mathit{Stringency}_{t-7}^{2} \notag
++\beta_3\mathit{SocialCaptial_{t}} \\
+&+\beta_4\left(\mathit{Stringency_{t-7}} \times \mathit{SocialCapital_{t}}\right) \notag \\
+&+ \left(\sum\gamma_i\mathit{X_i}\right)_{t}
++ \epsilon_{t}
+\end{align}
