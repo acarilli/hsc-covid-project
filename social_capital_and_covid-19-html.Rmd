@@ -110,7 +110,7 @@ In order to operationalize our basic framework, we specify a simple regression e
 
 ```{=tex}
 \begin{align}
-\mathit{New Cases_{i,t}} = \beta_0 + \beta_1\mathit{Stringency}_{i,t-7} +\beta_2\mathit{Stringency}_{i,t-7}^{2} +\beta_3\mathit{Sringency_{i,t-7}} \times \mathit{SocialCapital_{i,t}} + \epsilon_{i,t}
+\mathit{New Cases_{it}} = \beta_0 + \beta_1\mathit{Stringency}_{it-7} +\beta_2\mathit{Stringency}_{it-7}^{2} +\beta_3\mathit{Sringency_{it-7}} \times \mathit{SocialCapital_{it}} + \epsilon_{it}
 \end{align}
 ```
 where the number of daily COVID-19 cases is a function of the 7-day lag of the stringency index from Oxford University's COVID-19 Government Response Tracker (OxCGRT) [@hale_oxford_2020] for the United States, the square of the 7-day lag of the stringency index, and an interaction term between the 7-day lagged stringency index and the social capital index. We include the square of the 7-day lag of the stringency index to demonstrate the diminishing impact of stringency on case prevalence. This simple regression equation allows us to investigate our theoretical framework. That is, we can test our three propositions: do states that have a higher desire for prevention have better prevalence outcomes, do states that have stronger measured social capital scores have more physical interactions and worse prevalence outcomes, and, finally, do states with higher social capital scores *and* with a higher desire for preventative measures lead to even better prevalence outcomes?
@@ -179,15 +179,6 @@ stargazer(
   df %>%
     plm(
       cases_new ~ stringency_index_lag * state_level_index +
-        I(stringency_index_lag ^ 2),
-      data = .,
-      effect = "twoways",
-      index = "state",
-      method = "within"
-    ),
-  df %>%
-    plm(
-      cases_new ~ stringency_index_lag * state_level_index +
         I(stringency_index_lag ^ 2) +
         median_household_income +
         percent_adults_with_ba +
@@ -202,6 +193,15 @@ stargazer(
       effect = "time",
       index = "state",
       model = "within"
+    ),
+  df %>%
+    plm(
+      cases_new ~ stringency_index_lag * state_level_index +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "twoways",
+      index = "state",
+      method = "within"
     ),
   # df %>%
   #   plm(

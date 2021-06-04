@@ -9,28 +9,27 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-The first equation
+Pooled model no controls
 
 \begin{align}
-\mathit{New Cases_{i,t}} = \beta_0 + \beta_1\mathit{Stringency}_{i,t-7} +\beta_2\mathit{Stringency}_{i,t-7}^{2} +\beta_3\left(\mathit{Sringency_{i,t-7}} \times \mathit{SocialCapital_{i,t}}\right) + \epsilon_{i,t}
+\mathit{New Cases_{it}} = \gamma_0 &+ \gamma_1\mathit{Stringency}_{i,t-7}
++\gamma_2\mathit{Stringency}_{i,t-7}^{2} 
++\gamma_3\mathit{SocialCaptial_{it}} \notag \\
+&+\gamma_4\left(\mathit{Stringency_{i,t-7}} \times \mathit{SocialCapital_{it}}\right) + \nu_{it}
 \end{align}
 
-The second equation
+pooled model with controls
 
 \begin{align}
-\mathit{New Cases_{t}} = \beta_0 &+ \beta_1\mathit{Stringency}_{t-7}
-+\beta_2\mathit{Stringency}_{t-7}^{2} 
-+\beta_3\mathit{SocialCaptial_{t}} \notag \\
-&+\beta_4\left(\mathit{Stringency_{t-7}} \times \mathit{SocialCapital_{t}}\right) + \epsilon_{t}
+\mathit{New Cases_{it}} = \delta_0 &+ \delta_1\mathit{Stringency}_{i,t-7}
++\delta_2\mathit{Stringency}_{i,t-7}^{2} \notag
++\delta_3\mathit{SocialCaptial_{it}} \\
+&+\delta_4\left(\mathit{Stringency_{i,t-7}} \times \mathit{SocialCapital_{it}}\right) \notag \\
+&+ \sum{\eta_j Z_{it}}
++ \omega_{it}
 \end{align}
 
-the third equation
-
+Two-way Fixed Effects
 \begin{align}
-\mathit{New Cases_{t}} = \beta_0 &+ \beta_1\mathit{Stringency}_{t-7}
-+\beta_2\mathit{Stringency}_{t-7}^{2} \notag
-+\beta_3\mathit{SocialCaptial_{t}} \\
-&+\beta_4\left(\mathit{Stringency_{t-7}} \times \mathit{SocialCapital_{t}}\right) \notag \\
-&+ \left(\sum\gamma_i\mathit{X_i}\right)_{t}
-+ \epsilon_{t}
+\mathit{New Cases_{it}} = \beta_0 + \beta_1\mathit{Stringency}_{it-7} +\beta_2\mathit{Stringency}_{it-7}^{2} \notag \\ +\beta_3\left(\mathit{Sringency_{it-7}} \times \mathit{SocialCapital_{it}}\right) + \alpha_{i} + \epsilon_{it}
 \end{align}
