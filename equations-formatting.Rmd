@@ -11,13 +11,13 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Pooled model no controls
 
+
 \begin{align}
 \mathit{New Cases_{it}} = \gamma_0 &+ \gamma_1\mathit{Stringency}_{i,t-7}
 +\gamma_2\mathit{Stringency}_{i,t-7}^{2} 
 +\gamma_3\mathit{SocialCaptial_{it}} \notag \\
 &+\gamma_4\left(\mathit{Stringency_{i,t-7}} \times \mathit{SocialCapital_{it}}\right) + \nu_{it}
 \end{align}
-
 pooled model with controls
 
 \begin{align}
