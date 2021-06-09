@@ -68,10 +68,13 @@ A person's normative beliefs and attitudes can raise (or lower) the value of pre
 
 Table 1 depicts a way to visualize our framework on the interaction between social capital, values, and formal rules. The rows characterize groups by their normative beliefs and attitudes regarding prevention; individuals and groups in the top row place a higher value on prevention relative to the average value while those in the bottom row place a lower value on prevention relative to the average value. The columns characterize groups by the strength of their social capital; individuals and groups on the left have stronger social capital relative to the average amount of social capital while those on the right have weaker social capital relative to the average.
 
++------------------------------+-----------------------------+------------------------------+
 |                              | Strong Social Capital       | Weak Social Capital          |
-|------------------------------|-----------------------------|------------------------------|
++==============================+=============================+==============================+
 | **High Value on Prevention** | I - Lowest Prevalence Rate  | II - Higher Prevalence Rate  |
++------------------------------+-----------------------------+------------------------------+
 | **Low Value on Prevention**  | III - Lower Prevalence Rate | IV - Highest Prevalence Rate |
++------------------------------+-----------------------------+------------------------------+
 
 : The Interaction between Social Capital and Values for Disease Prevention
 
