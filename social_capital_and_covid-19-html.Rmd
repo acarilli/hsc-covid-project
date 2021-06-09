@@ -3,9 +3,9 @@ title: "Covid Alone"
 subtitle: The Complementarity between Social Capital and Formal Public Health Rules
   in the United States
 output:
-  pdf_document: default
-  html_document: default
   word_document: default
+  html_document: default
+  pdf_document: default
 bibliography: covid-references.bib
 abstract: The spread of COVID-19 provides a unique opportunity to explore the interactive effect of formal and informal rules. While economists and public health scholars realize the independent effects social capital and stringent public health rules have on prevalence and mortality rates, we advance this literature with a novel framework to analyze the interaction between the two. With state-level data on daily COVID-19 cases, a measure of policy stringency, and various measures of social capital, we find that prevalence rates fall by a larger amount in states where people place a higher value on COVID-19 prevention, where public health measures are more stringent, and where there are higher levels of social capital. We estimate that states with higher values for prevention and higher social capital experienced 81 fewer new  daily COVID-19 cases per million. The main results are robust to the inclusion of relevant controls, various specifications, and alternative measures of social capital. These results suggest that individuals and the communities they enter into and exit out of play an important role in the spread and prevention of infectious diseases independent of formal, governmental public health responses.
 ---
