@@ -1,0 +1,478 @@
+---
+title: "Covid Alone"
+subtitle: The Complementarity between Social Capital and Formal Public Health Rules
+  in the United States
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+bibliography: covid-references.bib
+abstract: The spread of COVID-19 provides a unique opportunity to explore the interactive effect of formal and informal rules. While economists and public health scholars realize the independent effects social capital and stringent public health rules have on prevalence and mortality rates, we advance this literature with a novel framework to analyze the interaction between the two. With state-level data on daily COVID-19 cases, a measure of policy stringency, and various measures of social capital, we find that prevalence rates fall by a larger amount in states where people place a higher value on COVID-19 prevention, where public health measures are more stringent, and where there are higher levels of social capital. We estimate that states with higher values for prevention and higher social capital experienced 81 fewer new  daily COVID-19 cases per million. The main results are robust to the inclusion of relevant controls, various specifications, and alternative measures of social capital. These results suggest that individuals and the communities they enter into and exit out of play an important role in the spread and prevention of infectious diseases independent of formal, governmental public health responses.
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+library(plm)
+library(bibtex)
+library(stargazer)
+df <- # data
+  here::here("data", "covid_data_final.csv") %>% 
+  read_csv() %>% 
+  filter(date >= "2020-03-01") #filter data 
+sc_names <- 
+  df %>% 
+  names()
+soc_cap_measures <- sc_names[c(14:17, 46:53)]
+```
+
+# Introduction
+
+The COVID-19 epidemics and the myriad private and public responses provide a unique opportunity to examine the interplay between formal and informal rules. Many scholars understand how these rules influence economic, social, and political behaviors [@north_institutions_1990; @baumol_entrepreneurship_1990; @ostrom_understanding_2005; @boettke_context_2007; @heller_social_2009; @williamson_informal_2009; @williamson_civilizing_2011; @williamson_securing_2011; @storr_understanding_2015; @vachris_role_2017], but the effects rules have on infectious and preventative behaviors---and prevalence rates---are less clear.[^1]
+
+[^1]: While the *disease versus institutions* debate analyzes some of these issues, the focus is on teasing out the relationships between economic and political institutions, infectious diseases, and economic development, not the determinants of infectious diseases [@bloom_geography_1998; @gallup_economic_2001; @acemoglu_disease_2007; @acemoglu_disease_2014; @bloom_disease_2014; @bhattacharyya_institutions_2009.]
+
+Formal rules can influence the difficulty or ease of developing public health bureaus [@troesken_pox_2015; @olmstead_arresting_2015], and we expect that people are better able to avoid infectious diseases and/or lessen mortality rates when they live in areas with greater economic freedom [@geloso_economic_2020; @candela_economic_2020]. Relatedly, individuals and firms in the private sector are more likely to provide public goods associated with public health when they face incentives to do so; for example, coal mining companies provided sanitation services on par with municipalities [@fishback_soft_1992]; groups of workers provided industrial-sickness funds that were effective means of insurance [@murray_origins_2007]; private water companies lowered mortality rates in Argentina [@galiani_water_2005]; textile mills and railroad companies provided mosquito control services prior to significant public health measures [@carson_firm-led_2016]. Individuals can also alter the incentives and rules they face to provide mosquito-control [@carson_privately_2020], and to encourage COVID-19 prevention [@carson_automatons_2020].
+
+Whether informal rules influence the spread of disease and whether such rules interact with formal rules to influence the spread of disease, however, are underexplored questions.[^2] In response to COVID-19, scholars recognized that formal public health rules, e.g., lockdown orders, might have a dampening effect on disease spread [@brodeur_literature_nodate]. Similarly, scholars recognize that social capital---a kind of informal institution---encourages COVID-19 preventative [@imbulana_arachchi_role_2021; @makridis_how_2021; @brodeur_literature_nodate; @pitas_social_2020; @wong_social_2020; @borgonovi_bowling_2020; @borgonovi_community_2020; @wu_social_2020; @wu_social_2020-1; @durante_civic_2020].[^3] For example, @makridis_how_2021 shows that between March and July of 2020 social capital negatively influences the spread of COVID-19. Using state fixed effects that attenuate omitted variable bias and alternative measures of social capital, they report that the spread of COVID-19 falls by 18 percent (and deaths fall by 5.7 percent) as counties increase their social capital from the 25th percentile to the 75th percentile.[^4]
+
+[^2]: See @brennan_explaining_2013 and @bicchieri_norms_2017 for general treatments on social norms. For example, informal rules influence behavior via social capital, e.g., pro-environmental behaviors [@farrow_social_2017]. See @carson_informal_2017 for a description of the informal norms related to HIV prevention in the United States.
+
+[^3]: @putnam_bowling_2001: 19 defines social capital as the "connections among individuals---social networks and the norms of reciprocity and trustworthiness that arise from them." The influence social capital has on health outcomes in general is well-studied [@putnam_bowling_2001], and there is even some recognition that social capital influences the spread of infectious diseases by encouraging the use of vaccinations [@nawa_association_2019; @palanisamy_social_2018] and other behaviors that spread influenza [@ronnerstrand_social_2013; @ronnerstrand_social_2014; @chuang_social_2015].
+
+[^4]: Other studies find similar results, but are not as convincing given confounding variables. For example, people living in counties (in the United States) with higher levels of social capital reduced their mobility at a quicker rate than people in counties with lower levels of social capital [@borgonovi_bowling_2020; also, see @borgonovi_community_2020]. @borgonovi_community_2020 show that infection rates were initially higher in counties with more social capital, but transmission and mortality rates declined as people learned more about COVID-19. Similarly, @bartscher_social_2020 suggests that the number of COVID-19 cases across Europe was initially higher in countries with higher social capital, but that cases increased at a slower rate in countries with higher social capital. There is also suggestive evidence that people in areas with more social capital are more likely to follow formal public health rules, e.g., wearing face masks [@wu_social_2020] and are more likely to have higher rates of testing [@wu_social_2020-1]. Income also influences the effectiveness of lockdown orders, i.e., whether people are likely to comply with such orders (@wright_poverty_2020).
+
+We advance this literature by developing a novel framework to 1) assess the conditions under which social capital influences the spread of COVID-19 and 2) compare the effects social capital has on the growth of COVID-19 relative to more formal public health measures. The condition of particular interest is that social capital negatively influences the spread of COVID-19 when people value COVID-19 prevention.[^5] With one year's worth of state-level, daily data on COVID-19 cases, social capital, and stringency in the United States, we build a panel model to analyze these issues. We find results similar to @makridis_how_2021 in that social capital encourages COVID-19 prevention. However, when we explicitly account for formal and informal rules, i.e., social capital, and the interaction between these rules. Our main result is that states with stronger social capital (relative to the average) *and* with a higher value of COVID-19 prevention (relative to the average) have about 81 fewer COVID-19 cases whereas states with weaker social capital (relatively to the average) *and* a lower value for COVID-19 prevention (relativel to the average) have about 60 more cases. Our results are consistent when we disaggregate social capital based on measured sub-components, and they are robust to the inclusion of standard controls and alternative measures of social capital.
+
+[^5]: We use a measure of policy stringency to represent the variety of formal public health measures *and* as a proxy for the values people within a state have for COVID-19 prevention.
+
+These results suggest that formal and informal rules---and their interactions---play identifiable roles in how people spread infectious diseases, which should be recognized in subsequent research in both economics and in public health. There are numerous implications of these results. First, economic freedom---as it bolsters social capital [@berggren_free_2006] and disease prevention [@geloso_economic_2020; @candela_economic_2020]---should play a larger role in developing public health policy; in particular, the formal and informal rules that influence economic freedom are integral components of public health.
+
+A related theme in the economic literature on institutions suggests that the formal rules that facilitate economic development depend on supporting informal rules, and that mimicking formal rules without the underlying cultural values and informal rules or *metis*, following @boettke_institutional_2008, will likely cause worse outcomes. Evidence on the efficacy of matching formal and informal institutions suggests that areas with higher levels of trust, self-reliance, and civic belief foster economic and political institutions that protect property rights, promote openness, and economic development [@vachris_role_2017]. Furthermore, government-led attempts to foster social capital or create homogeneity---for example, through language laws or the creation of a civil court---create unintended, harmful effects [@carilli_government_2008]. Thus, we resist attempts to alter the level and/or kind of social capital via policy so as to influence COVID-19 transmission rates. Social capital is not easily alterable as if it were a lever one person or a large group of people could toggle. Even though social capital supports formal public health rules and can lower the growth rate of COVID-19 cases, this does not necessarily suggest policymakers should target areas with less social capital by increasing stringency measures or by doubling-down along the intensive margin [as suggested by @bartscher_social_2020].
+
+The relationships between social capital, formal public health rules, and the spread of infectious diseases enhances our understanding of how people spread infectious diseases. Just as we recognize individuals can influence the formal and informal rules that influence economic, political, and social behaviors, we should recognize individuals also influence how diseases spread by the formal and informal rules they create and adapt.
+
+# Values, Social Capital, and COVID-19
+
+Social capital takes various forms between individuals to encourage cooperation, which then influences health outcomes. Two of the main forms of social capital include *bridging* between people within a social network and *bonding* between people from different social networks. We do not take a stance as to which form of social capital is more or less relevant in the context of COVID-19. We do, however, provide evidence below regarding the measured components of social capital, e.g., categories like family unity and community health. Furthermore, while social capital can be used for legitimate and nefarious activities, we are solely interested in whether social capital influences behaviors related to the spread of disease.
+
+Social capital can influence health outcomes in multiple ways [@putnam_bowling_2001]: people with greater access to social capital or in a network with stronger social capital might have more tangible assistance from others, e.g., money or health care; they might have more access to organizations that lower the cost of health care; they might have more opportunities to innovate and provide goods and services related to health; they might be in a social network where social norms enforce healthy behaviors, e.g., don't take the last bite of food; they might also have more of an ability to advance a political agenda to alter health policy; and there might be a physiological response because of social capital that improves immune systems [@putnam_bowling_2001]. Additional evidence also shows that social capital influences obesity [@kim_us_2006].
+
+We argue that social capital complements the values people have for prevention and the subsequent formal rules they adopt. That is, people are more likely to limit the spread of COVID-19 when they value preventative behavior and preventative rules and when they live in a community where social capital reinforces such values, behaviors, and rules. Thus, the interaction effect between the value people have for prevention, formal public health rules, and the kind of social capital is our primary interest---rather than each of these factors separately.
+
+We suggest the interaction between social capital, values for prevention, and formal rules has a negative effect on prevalence rates because social capital ultimately raises the private costs to individuals of breaking the rules that a group perceives as legitimate, namely formal and informal public health rules. People with stronger levels of social capital are more likely to interact with each other---which can increase the spread of diseases like COVID-19 due to being physically close to others---but they are also likely to follow the public health rules they value. The more people value disease prevention over other legitimate values they might have and the more they believe public health rules are also legitimate and valuable, breaking those rules is taken as an affront punishable informally by a personal rebuke, a worsening reputation, a refusal of service, or fewer social contacts. More formal measures of enforcement and punishment are also relevant, e.g., calling a public health department, a security guard, or the police.[^6] Relatedly, people are better able to monitor the behavior of others in areas with stronger social capital given numerous social ties; this suggests that infractions are more likely to be discovered in areas with stronger social capital. Thus, as strong as values for prevention are and as severe as formal public health rules are, social capital will encourage individuals to engage in preventative behavior. All else equal, this interaction lowers the number of COVID-19 cases.
+
+[^6]: Whereas formal rules specify a primary directive and secondary qualifiers, a centralized enforcement mechanism, and it is a rule derived from some kind of governing body, informal rules might only specify a primary directive with few secondary qualifiers, enforcement is decentralized, and it is a rule derived from the normative attitudes of the individuals to which the rule applies [@brennan_explaining_2013].
+
+A person's normative beliefs and attitudes can raise (or lower) the value of preventative behavior, which can encourage (or discourage) the use of masks, social distancing, etc. People might value disease prevention to improve their own health and the health of their friends and family; and people might legitimately value other goals over disease prevention, e.g., maintaining cultural practices, following religious observances, pursuing economic activity, etc. Given the values people have, then, the community and kind of social capital within which people pursue their individual and cooperative goals becomes relevant. That is, the quality, kind, or strength of social capital influences how well people achieve their goals, whatever those goals might be. Thus, the kinds (and amount) of bonds people form within and between groups vary across school groups, business environments, and familial and social settings, and gives social capital an entrepreneurial quality [@chamlee-wright_structure_2008; @carilli_government_2008]. Recently, @storr_virgil_henry_crisis_2021 argues that epidemic crises like the COVID-19 crisis influenced people's social capital by encouraging deeper connections with pre-existing contacts. It remains to be seen, however, how widespread separation might also change, i.e., erode, pre-existing relationships.
+
+Table 1 depicts a way to visualize our framework on the interaction between social capital, values, and formal rules. The rows characterize groups by their normative beliefs and attitudes regarding prevention; individuals and groups in the top row place a higher value on prevention relative to the average value while those in the bottom row place a lower value on prevention relative to the average value. The columns characterize groups by the strength of their social capital; individuals and groups on the left have stronger social capital relative to the average amount of social capital while those on the right have weaker social capital relative to the average.
+
++------------------------------+-----------------------------+------------------------------+
+|                              | Strong Social Capital       | Weak Social Capital          |
++==============================+=============================+==============================+
+| **High Value on Prevention** | I - Lowest Prevalence Rate  | II - Higher Prevalence Rate  |
++------------------------------+-----------------------------+------------------------------+
+| **Low Value on Prevention**  | III - Lower Prevalence Rate | IV - Highest Prevalence Rate |
++------------------------------+-----------------------------+------------------------------+
+
+: The Interaction between Social Capital and Values for Disease Prevention
+
+Thus, the interaction effect between values for prevention and social capital have on prevalence rates varies by quadrant. We expect the interaction effect between values for prevention and social capital to have the strongest effect on prevalence rates when people place a higher value on prevention, when they adopt more stringent public health rules, and when they have stronger social capital (Quadrant 1). We expect the magnitude of social capital to have the weakest effect on new cases when 1) people place a lower value on preventative behavior and 2) people have weaker social capital (Quadrant IV).
+
+The following testable propositions guide our analysis below:
+
+1.  People that place a higher value on COVID-19 prevention will have larger, negative effects on the growth of COVID-19 cases than people that do not value COVID-19 prevention, all else equal.
+
+2.  People with stronger social capital will have larger, positive effects on the growth of COVID-19 cases than people with weaker social capital, all else equal.
+
+3.  People that place a higher value on COVID-19 prevention *and* have stronger social capital will have the largest, negative effect on the growth of COVID-19 cases, all else equal.
+
+# Data, Model, and Results
+
+This framework is somewhat easy to operationalize in the context of COVID-19, in addition to other epidemiological cases where formal and informal rules are relevant. We measure the columns of Table 1 with various indices of social capital, e.g., the Joint Economic Committee's (JEC) social capital project reports a measure of social capital across all states. We measure the rows of Table 1 with a measure of policy stringency, which we suggest is indicative---but not a perfect representation---of the values people hold regarding COVID-19 prevention.
+
+Moreover, we specify three models: The first is a one-way fixed effects model with no controls given by
+
+```{=tex}
+\begin{align}
+\mathit{New Cases_{it}} = \gamma_0 &+ \gamma_1\mathit{Stringency}_{i,t-7}
++\gamma_2\mathit{Stringency}_{i,t-7}^{2} 
++\gamma_3\mathit{SocialCaptial_{it}} \notag \\
+&+\gamma_4\left(\mathit{Stringency_{i,t-7}} \times \mathit{SocialCapital_{it}}\right) + \nu_{it}
+\end{align}
+```
+The second adds a vector of controls to the first equation and is given by
+
+```{=tex}
+\begin{align}
+\mathit{New Cases_{it}} = \delta_0 &+ \delta_1\mathit{Stringency}_{i,t-7}
++\delta_2\mathit{Stringency}_{i,t-7}^{2} \notag
++\delta_3\mathit{SocialCaptial_{it}} \\
+&+\delta_4\left(\mathit{Stringency_{i,t-7}} \times \mathit{SocialCapital_{it}}\right) \notag \\
+&+ \sum{\eta_j Z_{it}}
++ \omega_{it}
+\end{align}
+```
+The third is a two-way fixed effects model given by
+
+```{=tex}
+\begin{align}
+\mathit{New Cases_{it}} = \beta_0 + \beta_1\mathit{Stringency}_{it-7} +\beta_2\mathit{Stringency}_{it-7}^{2} \notag \\ +\beta_3\left(\mathit{Sringency_{it-7}} \times \mathit{SocialCapital_{it}}\right) + \alpha_{i} + \epsilon_{it}
+\end{align}
+```
+where the number of daily COVID-19 cases is a function of the 7-day lag of the stringency index from Oxford University's COVID-19 Government Response Tracker (OxCGRT) [@hale_oxford_2020] for the United States, the square of the 7-day lag of the stringency index, and an interaction term between the 7-day lagged stringency index and the social capital index. We include the square of the 7-day lag of the stringency index to demonstrate the diminishing impact of stringency on case prevalence. This simple regression equation allows us to investigate our theoretical framework. That is, we can test our three propositions: do states that have a higher desire for prevention have better prevalence outcomes, do states that have stronger measured social capital scores have more physical interactions and worse prevalence outcomes, and, finally, do states with higher social capital scores *and* with a higher desire for preventative measures lead to even better prevalence outcomes?
+
+The data for our empirical analysis comes from a number of sources. Our dependent variable, the daily number of new cases per million and our stringency measures come from OxCGRT for the United States. This state level data provides a systematic way to measure and compare state governments' responses to the pandemic. The social capital measures and other demographic measures were taken from the US Congress Joint Economic Committee's Social Capital Project [@noauthor_social_nodate]. This project provides us with a state-level social capital index, which uses a set of specific measures in categories such as family unity, family interaction, social support, community health, institutional health, collective efficacy, and philanthropic health. The aggregate measure is then calculated as a deviation from a mean score, normalized to 0.
+
+Our sample of state-level data supports the following characterization. The mean household income was \$56,031; the median percent of people with a B.A. degree was 29%; the median percent of people who reported they were in poor or fair health was about 16%; the median percent of Black or African American people was about 7%; a mean population density of about 407 people per square mile; and a mean rural population of about 26%. Table 2 presents standard descriptive statistics for our sample of state-level data.
+
+```{r table-2, results='asis', eval=TRUE}
+df %>%
+  select(
+    cases_new,
+    stringency_index_lag,
+    state_level_index,
+    percent_adults_with_ba,
+    percent_in_fair_or_poor_health,
+    percent_black,
+    percent_rural,
+    percent_65,
+    average_temperature,
+    median_household_income,
+    density
+  ) %>%
+  as.data.frame() %>%
+  stargazer(
+    type = "latex",
+    summary.stat = c("n",
+                     "min",
+                     "max",
+                     "mean",
+                     "median",
+                     "sd"),
+    digits = 2,
+    covariate.labels = c(
+      "New Cases",
+      "$\\mathrm{Stringency_{t-7}}$",
+      "State Level Index",
+      "\\% Bachelor's",
+      "\\% Fair/Poor Health",
+      "\\% Black",
+      "\\% Rural",
+      "\\% > 65",
+      "Average Temperature",
+      "Median Income",
+      "Population Density"
+    ),
+    title = "Descriptive Statistics",
+    header = FALSE,
+    no.space = TRUE
+  )
+```
+
+Table 3 presents results for the basic model and subsequent specifications for our balanced panel of daily data from March 1, 2020 to April 4, 2021 across fifty states and the District of Columbia. Column 1 estimates equation 1 using a within model that includes period fixed effects; column 2 includes relevant control variables; and column 3 includes both cross-sectional and period fixed effects to account for cross-sectional differences between states. For all models we report clustered standard errors.
+
+```{r table-3, results='asis', eval=TRUE}
+stargazer(
+  df %>%
+    plm(
+      cases_new ~ stringency_index_lag * state_level_index +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "time",
+      index = "state",
+      model = "within"
+    ),
+  df %>%
+    plm(
+      cases_new ~ stringency_index_lag * state_level_index +
+        I(stringency_index_lag ^ 2) +
+        median_household_income +
+        percent_adults_with_ba +
+        percent_in_fair_or_poor_health +
+        percent_black +
+        density +
+        percent_rural +
+        percent_65 +
+        average_temperature +
+        governor_political_affiliation,
+      data = .,
+      effect = "time",
+      index = "state",
+      model = "within"
+    ),
+  df %>%
+    plm(
+      cases_new ~ stringency_index_lag * state_level_index +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "twoways",
+      index = "state",
+      method = "within"
+    ),
+  # df %>%
+  #   plm(
+  #     cases_new ~ stringency_index_lag * state_level_index  +
+  #       I(stringency_index_lag ^ 2) +
+  #       average_temperature +
+  #       governor_political_affiliation +
+  #       percent_in_fair_or_poor_health |
+  #       median_household_income +
+  #       percent_adults_with_ba +
+  #       percent_black +
+  #       density +
+  #       percent_rural +
+  #       percent_65 +
+  #       average_temperature +
+  #       governor_political_affiliation +
+  #       percent_in_fair_or_poor_health +
+  #       stringency_index_lag +
+  #       I(stringency_index_lag) ^ 2,
+  #     data = .,
+  #     effect = "time",
+  #     index = "state",
+  #     model = "within"
+  #   ),
+  type = "latex",
+  df = FALSE,
+  covariate.labels = c(
+    "$\\mathrm{Stringency_{t-7}}$",
+    "Social K",
+    "$\\mathrm{Stringency}_{t-7}^2$",
+    "Median Income",
+    "\\% Bachelor's",
+    "\\% Fair/Poor Health",
+    "\\% Black",
+    "Population Density",
+    "\\% Rural",
+    "\\% > 65",
+    "Average Temperature",
+    "Republican Governor",
+    "$\\mathrm{Stringency_{t-7}}$ * Social K"
+  ),
+  title = "Fixed Effects Regression Results",
+  dep.var.labels = "Daily New Cases per Million",
+  column.labels = c(
+    "$\\mathrm{FE_{t}}$",
+    "$\\mathrm{FE_{t}}$",
+    "$\\mathrm{FE_{i,t}}$"
+    # "$\\mathrm{IVFE_t}$"
+  ),
+  header = FALSE,
+  no.space = TRUE
+)
+```
+
+Column 1 in Table 3 provides the empirical results of equation 1 and supports our initial propositions. A one unit increase in the level of daily stringency, which we suggest is indicative of the values people have for disease prevention, reduces new cases by 4.48 per million. States with a higher level of social capital add about 26 new cases per million.
+
+More importantly, states with a higher level of social capital and a higher level of daily stringency reduce new cases by about .87 per million. This multiplicative impact suggests that states with higher levels of social capital *and* higher stringency responded more collectively and slowed daily disease spread at a higher rate than those states with lower levels of social capital but with similar levels of stringency.
+
+These results support our earlier propositions. That is, stringency is statistically significant and negative, supporting Proposition 1, e.g., people who value prevention will see lower prevalence on average. The positive and significant coefficient on the social capital variable supports Proposition 2 that stronger social capital leads to higher prevalence, which supports the notion that social capital encourages physical interactions and social gatherings. Finally, the negative value on the interaction term supports Proposition 3, that states with higher levels of stringency and higher rates of social capital will have an even larger reduction in new cases.
+
+Column 2 replicates the specification found in column 1, but with a number of time-invariant variables as proxies for cross-sectional variation. These variables control for factors that could possibly influence prevalence, as well as a state's desire for prevention. These control variables are household income, population density, average temperature, political affiliation of a state's governor, and the percentage of a state's population with a bachelor's degree, in fair or poor health, who are African American, who are older than 65, and who live in rural areas. Column 2 also includes a measure for the political affiliation of the governor. Following @adolph_pandemic_2020 and @baccini_explaining_2020 who find political affiliation of a governor influences the kind and timing of stringency measures, we include this measure as an additional proxy for the desire of citizens of a state for prevention measures. We expect that Republican Governors would be less likely to implement highly stringent measures in light of other values. Our choice of a variable for the Governor's political party references the fact that most preventative measures have been enacted by executive order and not by legislative action. These measures were taken from the US Census American Community Survey (2019), the Bureau of Economic Analysis, and the Bureau of Labor Statistics. Data on the political party of the Governor was taken from ballotpedia.org (accessed Nov. 12, 2020). Other controls, like race, poverty and education level also have impacts that support previous research [@townsend_outcomes_2020; @yancy_covid-19_2020].
+
+Column 2 of Table 3 shows similar results to our first specification. Stringency lowers new cases by 5.38 per million, social capital adds to new cases by about 31 per million, and the social capital and stringency interaction term lowers new cases by .641 per million.
+
+Column 3 of Table 3---the two-way fixed effects specification---shows similar results. A higher level of stringency decreases new cases by 3.94 per million and the social capital and stringency interaction term lowers new cases by an additional .568 per million. Unfortunately, column 3 requires us to drop our time-invariant social capital dummy variables to account for the cross-sectional variation.
+
+The sign, magnitude, and statistical significance of our main variables of interest remain remarkably similar across all three specifications. This suggests stringency, social capital, and the interaction of stringency and social capital are important factors that influence the spread of COVID-19. Our results do not qualitatively differ as we control for two-way fixed effects (in specification 3) and relevant, observable proxies (in specification 2).
+
+To clarify the meaning of our results, Table 4 shows the change in daily, new cases using specification 3 of Table 3 across different levels of social capital and the desire for prevention relative to the typical values of each. We measure high and low prevention at the first, second, and third quartiles, and we measure strong and weak social capital at two standard deviations above and below the mean. Once again Table 4 supports our propositions, especially 1 and 3.[^7] The whole numbers in Table 4 represent deviations away from the typical desire for prevention and the typical level of social capital, and the typical state shows no change in daily, new cases.
+
+[^7]: Specification 3 drops the social capital measure as it does not vary over time.
+
+```{r table-4, results='asis', eval=TRUE}
+df %>%
+  plm::plm(
+    cases_new ~ stringency_index_lag * state_level_index +
+      I(stringency_index_lag ^ 2),
+    data = .,
+    effect = "twoways",
+    index = "state",
+    method = "within"
+  ) %>%
+  broom::tidy() %>%
+  pull(estimate) ->
+  coefs
+
+
+sc_index <- c(-2, -1, 0, 1, 2)
+stringency_index <-
+  df %>%
+  summarize(quant = quantile(stringency_index_lag, na.rm = TRUE)) %>%
+  # filter(between(quant, 1, 87)) %>%
+  filter(quant > 1 & quant < 87) %>%
+  pull(quant)
+
+new <- tibble()
+
+for (i in seq_along(sc_index)) {
+  for (j in seq_along(stringency_index)) {
+    new[i, j] <- coefs[1] * stringency_index[j] +
+      coefs[2] * stringency_index[j] ^ 2 +
+      coefs[3] * stringency_index[j] * sc_index[i]
+  }
+}
+
+
+flextable::set_flextable_defaults(text.align = "left", fonts_ignore = TRUE)
+
+new %>%
+  select(q1 = "...1",
+         q2 = "...2",
+         q3 = "...3") %>%
+  mutate(sc_index = sc_index) %>%
+  relocate(sc_index) %>%
+  arrange(desc(sc_index)) %>%
+  pivot_longer(-sc_index) %>%
+  pivot_wider(values_from = value,
+              names_from = sc_index) %>%
+  # select(1 , 3:7) %>%
+  arrange(desc(name)) %>%
+  mutate(name = c("High",
+                  "Average",
+                  "Low"))  %>%
+  rename(
+    "Desire for Prevention" = name,
+    "Strong" = `2`,
+    "Positive" = `1`,
+    "Average" = `0`,
+    "Negative" = `-1`,
+    "Weak" = `-2`
+  ) %>%
+  mutate(across(Strong:Weak, ~ round(.x + 128.6353))) %>% 
+  flextable::flextable() %>%
+  flextable::add_header_row(values = c("", "Level of Social Capital"),
+                            colwidths = c(2, 4)) %>%
+  flextable::align_text_col(align = "center", header = FALSE) %>%
+  flextable::set_caption("The Interaction between Social Capital and Values 
+                         for Disease Prevention - Estimated Values (cases per million)") %>%
+  flextable::bold(i = c(1, 3), j = c(2, 6)) %>%
+  flextable::hline_top(part = "header") %>%
+  flextable::add_footer_lines(
+    values = c(
+      "Strong and Weak Social Capital are 2 standard deviations above and below the mean level.",
+      "High, Average, and Low Desire for Prevention are measured at the first, second, and third quartiles of the Stringency Index."
+    )
+  ) %>%
+  flextable::fontsize(size = 9, part = "footer") 
+
+```
+
+States with a higher value for prevention (relative to the average value of prevention) experienced a larger reduction in new cases; states with a lower value for prevention (relative to the average value of prevention) mostly experienced additional new cases. States with a higher value of prevention *and* a stronger level of social capital experienced the largest reduction in new daily cases per million. That is, these states experienced approximately 81 fewer new cases relative to states with an average desire for prevention and the average level of social capital. States with a lower value of prevention and a lower level of social capital experienced 60 additional cases per million.
+
+We use specification 3 (over specification 2) to directly show the interdependent effects desire for prevention and social capital plays.[^8] Specification 2 is a relevant model as it accounts for the additional, marginal factors that might influence daily new cases, but there is no way to account for the variation in covariates by state in a single, easily interpretable graph. For example, the percentage of a state that reports fair or poor health and greater than 65 years old are covariates that could influence both the value for prevention and the level of social capital. While we find that these are relevant explanatory variables, as shown in specification 2, they cannot be included in a two-by-two matrix following Table 1. In any event, Table 3 shows that stringency, social capital, and the interaction between those two factors are still relevant.
+
+[^8]: Further, specification 3 is more parsimonious as it includes time and place fixed effects, which accounts for the unobservable cross-sectional variation; specification 2 only accounts for the variables we can observe and included.
+
+To see whether particular components of social capital are more or less relevant, Table 5 presents the same specification found in column 3 of Table 3 but accounting for the measured components of social capital. These components include family unity, family interaction, social support, community health, institutional health, collective efficacy, and philanthropic health. Stringency remains negative and statistically significant. Furthermore, these results suggest that the interaction effects between stringency and family unity and community health help to decrease new cases, whereas the interaction effects between stringency and family interaction add to new cases.
+
+```{r table-5, results='asis', eval=TRUE}
+stargazer(
+  # df %>%
+  #   plm(
+  #     cases_new ~ stringency_index_lag * state_level_index +
+  #       I(stringency_index_lag ^ 2),
+  #     data = .,
+  #     effect = "twoways",
+  #     index = "state",
+  #     method = "within"
+  #   ),
+  df %>%
+    plm(
+      cases_new ~ stringency_index_lag * family_unity +
+        stringency_index_lag * family_interaction +
+        stringency_index_lag * social_support +
+        stringency_index_lag * community_health +
+        stringency_index_lag * institutional_health +
+        stringency_index_lag * collective_efficacy +
+        stringency_index_lag * philanthropic_health +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "twoways",
+      index = "state",
+      method = "within"
+    ),
+  type = "latex",
+  df = FALSE,
+  covariate.labels = c(
+    "$\\mathrm{Stringency_{t-7}}$",
+    "$\\mathrm{Stringency}_{t-7}^2$",
+    "$\\mathrm{Stringency_{t-7}}$ * Family Unity",
+    "$\\mathrm{Stringency_{t-7}}$ * Family Interaction",
+    "$\\mathrm{Stringency_{t-7}}$ * Social Support",
+    "$\\mathrm{Stringency_{t-7}}$ * Community Health",
+    "$\\mathrm{Stringency_{t-7}}$ * Instutional Health",
+    "$\\mathrm{Stringency_{t-7}}$ * Collective Efficacy",
+    "$\\mathrm{Stringency_{t-7}}$ * Social Philanthropic Health"
+  ),
+  title = "Disaggregated Social Capital Regression Results",
+  dep.var.labels = "Daily New Cases per Million",
+  header = FALSE, 
+  no.space = TRUE
+)
+```
+
+Table 6 re-estimates specification 3 of Table 3 with alternative measures of social capital from the existing literature. These measures include: the SCP version of Penn State Index (2014), the Putnam Index (2000), the Alesina & La Ferrara social capital group (2000), and the Family Prosperity index reported in columns 2, 3, 4, respectively. All of these measures were taken from the JEC Social Capital Project. Our main results are consistent in sign and statistical significance across these measures of social capital.
+
+```{r table-6, results='asis', eval=TRUE}
+table_3_models <- list()
+
+for (i in 1:4) {
+  # for(i in 1:1)  {
+  # sc_i <- soc_cap_measures[i]
+  
+  table_3_models[[i]] <-
+    df %>%
+    plm(
+      cases_new ~ stringency_index_lag * get(soc_cap_measures[i]) +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "twoways",
+      index = "state",
+      model = "within"
+    ) 
+}
+
+names(table_3_models) <- soc_cap_measures[1:4]
+
+
+stargazer(
+  table_3_models,
+  type = "latex",
+  model.names = FALSE,
+  df = FALSE,
+  covariate.labels = c(
+    "$\\mathrm{Stringency_{t-7}}$",
+    "$\\mathrm{Stringency}_{t-7}^2$",
+    "$\\mathrm{Stringency_{t-7}}$ * Social K"
+  ),
+  title = "Alternative Measures of Social Capital Regression Results",
+  dep.var.labels = "Daily New Cases per Million",
+  header = FALSE,
+  column.labels = c(
+    "Penn State",
+    "Putnam",
+    "Alesina La Ferrara",
+    "Family Prosperity"
+  ),
+  no.space = TRUE
+)
+```
+
+# Discussion and Conclusion
+
+Our framework advances literature in economics and in public health by formally analyzing the interaction between formal and informal rules related to infectious diseases in the context of COVID-19 in the United States. We show that people stifle the spread of COVID-19 when they value prevention and when they have stronger social capital.
+
+These results have important, unrecognized implications for the literature in economics and public health. We suggest that disease prevention policies focusing primarily on formal, stringent measures are misguided because of diminishing effectiveness and especially when individuals increase their values for prevention and the strength of their social capital. Given the lagged-stringency-squared term is consistently positive and statistically significant, lagged-stringency tends to lower daily new cases per million, it does so at a *positive* rate. This indicates that increasing the stringency of public health rules declines in effectiveness beyond a certain point. For example, states might be too stringent in light of individual values for prevention and social capital. To the extent social capital is a means of prevention, it becomes moreso as people value prevention.
+
+While we show the interaction between social capital and the value for prevention lowers the spread of COVID-19, there are no clear policy levers. No one person or group has the ability to alter social capital or maintain the effectiveness of stringent policies given individual values. Social capital emerges when individuals value participating in social interactions; it is not clear how governmental officials, let alone public health officials, can know of or can influence such values and interactions. Even if officials could alter social capital, our results suggest such policies would be effective only when people already value prevention.
+
+However, there is one policy-related silver lining related to the tradeoff between health and income, following [@besley_economics_2020]. Our results suggest that states with stronger values for prevention and stronger social capital face a flatter---and potentially rising---policy mix curve. That is, states could experience additional reductions in new cases and less of a burden to economic and social activities when people value prevention and they have stronger social capital.
+
+Alternatively, public health policy can focus on the provision of quality information about COVID-19 transmission, as well as encouraging individuals to seek out relevant tests. Such measures encourage individuals to make decisions and *invest* in existing social ties according to their values.
+
+Future research should study the extent to which social capital erodes over time particularly because of formal rules that prevent interactions. That is, while we find social capital supports the values people have for disease prevention, the related formal rules people also use might begin to extinguish the meaningful parts of social capital given a longer duration or additional severity. This is especially once we recognize the cultural context within which social capital emerges, i.e., human interactions and the norms of proper behavior that develop. Formal rules that make such interactions more costly are likely to alter the costs and benefits people face such that existing social capital erodes [@carilli_government_2008] and alternative kinds of social capital will arise. Indeed, if formal rules prevent interactions that would have otherwise taken place, individuals realize less of a benefit from maintaining existing social ties.
+
+References
