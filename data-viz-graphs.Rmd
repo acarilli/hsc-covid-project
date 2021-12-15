@@ -1,0 +1,108 @@
+---
+title: ""
+author: "Tony Carilli"
+date: '`r format(lubridate::today(), "%B %d, %Y")`'
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    df_print: paged
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA,
+                      options(digits = 3, scipen = 999))
+library(tidyverse)
+```
+
+```{r}
+df <- 
+  here::here("data", "covid_data_final.csv") %>% 
+  read_csv() %>% 
+  filter(date >= "2020-03-01")
+```
+
+```{r message=FALSE}
+library(patchwork)
+(df %>% 
+  group_by(state) %>% 
+  summarize(stringency = median(stringency_index_lag, na.rm = TRUE),
+            state_level_index = state_level_index[date == "2021-04-04"],
+            cases = median(cases_new, na.rm = TRUE)) %>% 
+  ggplot() + 
+  aes(x = state_level_index, y = cases) + 
+  geom_point() + 
+  geom_smooth(method = "lm") | 
+  # scale_x_reverse() +
+
+df %>% 
+  group_by(state) %>% 
+  summarize(stringency = median(stringency_index_lag, na.rm = TRUE),
+            state_level_index = state_level_index[date == "2021-04-04"],
+            cases = median(cases_new, na.rm = TRUE)) %>% 
+  ggplot() + 
+  aes(x = stringency, y = cases) + 
+  geom_point() + 
+  geom_smooth(method = "lm"))  /
+  # scale_x_reverse())   
+
+df %>% 
+  group_by(state) %>% 
+  summarize(stringency = median(stringency_index_lag, na.rm = TRUE),
+            state_level_index = state_level_index[date == "2021-04-04"],
+            # cases = cases_confirmed_pc[date == "2021-04-04"]
+            cases = median(cases_new, na.rm = TRUE)) %>% 
+  # filter(state_level_index < -.5 | state_level_index > .5) %>%
+  ggplot() + 
+  aes(x = state_level_index, y = stringency, size = cases, color = cases) %>% 
+  geom_point() +
+  geom_vline(xintercept = 0, color = "red", size = 1.25, alpha = .5) +
+  geom_hline(yintercept = 47.4, color = "blue", size = 1.25, alpha = .5)  
+  # scale_x_reverse()
+  # geom_smooth(aes(x = state_level_index, y = cases/2.9), method = "lm", se = FALSE) +
+  # scale_y_continuous(sec.axis = sec_axis(~ -2.9 * ., name = "cases"))
+```
+
+```{r}
+df %>% 
+  group_by(state) %>% 
+  # summarize(stringency = mean(stringency_index_lag, na.rm = TRUE)) %>% 
+  summarize(med = median(stringency_index)) %>% 
+  summarize(median(med, na.rm = TRUE))
+```
+
+```{r}
+df %>% 
+  group_by(state) %>% 
+  summarize(stringency = median(stringency_index_lag, na.rm = TRUE),
+            state_level_index = state_level_index[date == "2021-04-04"],
+            # cases = cases_confirmed_pc[date == "2021-04-04"]
+            cases = median(cases_new, na.rm = TRUE)) %>% 
+  mutate(cases = log(cases)) %>% 
+  # filter(state_level_index < -.5 | state_level_index > .5) %>%
+  ggplot() + 
+  aes(x = state_level_index, y = cases, label = state) + 
+  # geom_point() +
+  # geom_vline(xintercept = 0, color = "red", size = 1.25, alpha = .5) +
+  # geom_hline(yintercept = 47.4, color = "blue", size = 1.25, alpha = .5) + 
+  # scale_x_reverse() + 
+  # geom_smooth(method = "lm") +
+  geom_text() + 
+  theme_classic() + 
+  labs(x = "Social Capital", y = "log(New Cases per Million)")
+```
+
+```{r}
+df %>%
+  filter(cases_confirmed > 0) %>% 
+    plm(
+      log(cases_confirmed) ~  state_level_index,
+      data = .,
+      effect = "time",
+      index = "state",
+      model = "within"
+    ) %>% 
+  lmtest::coeftest(vcovHC(., method = "white1", type = "HC0", cluster = "group"))
+```
+
