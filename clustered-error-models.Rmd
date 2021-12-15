@@ -1,0 +1,186 @@
+---
+title: "Models with Clustered "
+author: "Tony Carilli"
+date: '`r format(lubridate::today(), "%B %d, %Y")`'
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA,
+                      options(digits = 3, scipen = 999))
+library(tidyverse)
+library(plm)
+library(stargazer)
+# library(gt)
+df <- # data
+  here::here("data", "covid_data_final.csv") %>% 
+  read_csv() %>% 
+  filter(date >= "2020-03-01")
+
+sc_names <-
+  df %>%
+  names() 
+
+soc_cap_measures <- sc_names[c(14:17, 46:53)]
+```
+
+```{r table-3, results='asis', eval=FALSE}
+stargazer(
+df %>%
+    plm(
+      cases_new ~ stringency_index_lag * state_level_index +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "time",
+      index = "state",
+      model = "within"
+    ) %>% 
+  lmtest::coeftest(vcovHC(., method = "white1", type = "HC0", cluster = "group")),
+
+df %>%
+    plm(
+      cases_new ~ stringency_index_lag * state_level_index +
+        I(stringency_index_lag ^ 2) +
+        median_household_income +
+        percent_adults_with_ba +
+        percent_in_fair_or_poor_health +
+        percent_black +
+        density +
+        percent_rural +
+        percent_65 +
+        average_temperature +
+        governor_political_affiliation,
+      data = .,
+      effect = "time",
+      index = "state",
+      model = "within"
+    ) %>% 
+  lmtest::coeftest(vcovHC(., method = "white1", type = "HC0", cluster = "group")),
+
+df %>%
+    plm(
+      cases_new ~ stringency_index_lag * state_level_index +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "twoways",
+      index = "state",
+      method = "within"
+    ) %>% 
+  lmtest::coeftest(vcovHC(., method = "white1", type = "HC0", cluster = "group")),
+
+type = "latex",
+  df = FALSE,
+  covariate.labels = c(
+    "$\\mathrm{Stringency_{t-7}}$",
+    "Social K",
+    "$\\mathrm{Stringency}_{t-7}^2$",
+    "Median Income",
+    "\\% Bachelor's",
+    "\\% Fair/Poor Health",
+    "\\% Black",
+    "Population Density",
+    "\\% Rural",
+    "\\% > 65",
+    "Average Temperature",
+    "Republican Governor",
+    "$\\mathrm{Stringency_{t-7}}$ * Social K"
+  ),
+  title = "Fixed Effects Regression Results",
+  dep.var.labels = "Daily New Cases per Million",
+  column.labels = c(
+    "$\\mathrm{FE_{t}}$",
+    "$\\mathrm{FE_{i,t}}$",
+    "$\\mathrm{FE_t}$"
+    # "$\\mathrm{IVFE_t}$"
+  ),
+  header = FALSE
+)
+```
+
+```{r table-5, results='asis', eval=FALSE}
+stargazer(
+  df %>%
+    plm(
+      cases_new ~ stringency_index_lag * family_unity +
+        stringency_index_lag * family_interaction +
+        stringency_index_lag * social_support +
+        stringency_index_lag * community_health +
+        stringency_index_lag * institutional_health +
+        stringency_index_lag * collective_efficacy +
+        stringency_index_lag * philanthropic_health +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "twoways",
+      index = "state",
+      method = "within"
+    ) %>%
+    lmtest::coeftest(vcovHC(
+      .,
+      method = "white1",
+      type = "HC0",
+      cluster = "group"
+    )),
+  type = "latex",
+  df = FALSE,
+  covariate.labels = c(
+    "$\\mathrm{Stringency_{t-7}}$",
+    "$\\mathrm{Stringency}_{t-7}^2$",
+    "$\\mathrm{Stringency_{t-7}}$ * Family Unity",
+    "$\\mathrm{Stringency_{t-7}}$ * Family Interaction",
+    "$\\mathrm{Stringency_{t-7}}$ * Social Support",
+    "$\\mathrm{Stringency_{t-7}}$ * Community Health",
+    "$\\mathrm{Stringency_{t-7}}$ * Instutional Health",
+    "$\\mathrm{Stringency_{t-7}}$ * Collective Efficacy",
+    "$\\mathrm{Stringency_{t-7}}$ * Social Philanthropic Health"
+  ),
+  title = "Disaggregated Social Capital Regression Results",
+  dep.var.labels = "Daily New Cases per Million",
+  header = FALSE,
+  no.space = TRUE
+)
+```
+
+```{r table-6, eval=FALSE}
+table_3_models <- list()
+
+for (i in 1:4) {
+  # for(i in 1:1)  {
+  # sc_i <- soc_cap_measures[i]
+  
+  table_3_models[[i]] <-
+    df %>%
+    plm(
+      cases_new ~ stringency_index_lag * get(soc_cap_measures[i]) +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "twoways",
+      index = "state",
+      model = "within"
+    ) %>% 
+  lmtest::coeftest(vcovHC(., method = "white1", type = "HC0", cluster = "group"))  
+}
+
+names(table_3_models) <- soc_cap_measures[1:4]
+
+stargazer(
+  table_3_models,
+  type = "latex",
+  model.names = FALSE,
+  df = FALSE,
+  covariate.labels = c(
+    "$\\mathrm{Stringency_{t-7}}$",
+    "$\\mathrm{Stringency}_{t-7}^2$",
+    "$\\mathrm{Stringency_{t-7}}$ * Social K"
+  ),
+  title = "Alternative Measures of Social Capital Regression Results",
+  dep.var.labels = "Daily New Cases per Million",
+  header = FALSE,
+  column.labels = c(
+    "Penn State",
+    "Putnam",
+    "Alesina La Ferrara",
+    "Family Prosperity"
+  )
+)
+```
+
