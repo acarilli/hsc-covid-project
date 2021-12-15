@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE, comment = NA,
                       options(digits = 3, scipen = 999))
 library(plm)
-library(stargazer)
+library(tidyverse)
 # library(gt)
 df <- # data
   here::here("data", "covid_data_final.csv") %>% 
@@ -17,7 +17,7 @@ df <- # data
   filter(date >= "2020-03-01")
 ```
 
-```{r table-3, results='asis', eval=FALSE}
+```{r table-3}
 df %>%
     plm(
       cases_new ~ stringency_index_lag * state_level_index +
@@ -63,7 +63,7 @@ df %>%
 
 ```
 
-```{r table-5, results='asis', eval=FALSE}
+```{r table-5}
 df %>%
     plm(
       cases_new ~ stringency_index_lag * family_unity +
@@ -87,7 +87,7 @@ df %>%
     ))
 ```
 
-```{r table-6, eval=FALSE}
+```{r table-6}
 table_3_models <- list()
 
 for (i in 1:4) {
@@ -110,5 +110,4 @@ for (i in 1:4) {
 table_3_models
 ```
 
-```
 
