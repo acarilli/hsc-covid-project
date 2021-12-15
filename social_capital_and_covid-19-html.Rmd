@@ -2,6 +2,10 @@
 title: "Covid Alone"
 subtitle: The Complementarity between Social Capital and Formal Public Health Rules
   in the United States
+author: 
+  - Byron Carson, III^[Hampden-Sydney College, bcarson@hsc.edu]
+  - Justin Isaacs^[Hampden-Sydney College, jisaacs@hsc.edu]
+  - Anthony Carilli^[Hampden-Sydney College, tcarilli@hsc.edu]
 output:
   word_document: default
   html_document: default
