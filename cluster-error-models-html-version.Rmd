@@ -1,0 +1,114 @@
+---
+title: ""
+author: "Tony Carilli"
+date: '`r format(lubridate::today(), "%B %d, %Y")`'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA,
+                      options(digits = 3, scipen = 999))
+library(plm)
+library(stargazer)
+# library(gt)
+df <- # data
+  here::here("data", "covid_data_final.csv") %>% 
+  read_csv() %>% 
+  filter(date >= "2020-03-01")
+```
+
+```{r table-3, results='asis', eval=FALSE}
+df %>%
+    plm(
+      cases_new ~ stringency_index_lag * state_level_index +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "time",
+      index = "state",
+      model = "within"
+    ) %>% 
+  lmtest::coeftest(vcovHC(., method = "white1", type = "HC0", cluster = "group"))
+
+df %>%
+    plm(
+      cases_new ~ stringency_index_lag * state_level_index +
+        I(stringency_index_lag ^ 2) +
+        median_household_income +
+        percent_adults_with_ba +
+        percent_in_fair_or_poor_health +
+        percent_black +
+        density +
+        percent_rural +
+        percent_65 +
+        average_temperature +
+        governor_political_affiliation,
+      data = .,
+      effect = "time",
+      index = "state",
+      model = "within"
+    ) %>% 
+  lmtest::coeftest(vcovHC(., method = "white1", type = "HC0", cluster = "group"))
+
+df %>%
+    plm(
+      cases_new ~ stringency_index_lag * state_level_index +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "twoways",
+      index = "state",
+      method = "within"
+    ) %>% 
+  lmtest::coeftest(vcovHC(., method = "white1", type = "HC0", cluster = "group"))
+
+
+```
+
+```{r table-5, results='asis', eval=FALSE}
+df %>%
+    plm(
+      cases_new ~ stringency_index_lag * family_unity +
+        stringency_index_lag * family_interaction +
+        stringency_index_lag * social_support +
+        stringency_index_lag * community_health +
+        stringency_index_lag * institutional_health +
+        stringency_index_lag * collective_efficacy +
+        stringency_index_lag * philanthropic_health +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "twoways",
+      index = "state",
+      method = "within"
+    ) %>%
+    lmtest::coeftest(vcovHC(
+      .,
+      method = "white1",
+      type = "HC0",
+      cluster = "group"
+    ))
+```
+
+```{r table-6, eval=FALSE}
+table_3_models <- list()
+
+for (i in 1:4) {
+  # for(i in 1:1)  {
+  # sc_i <- soc_cap_measures[i]
+  
+  table_3_models[[i]] <-
+    df %>%
+    plm(
+      cases_new ~ stringency_index_lag * get(soc_cap_measures[i]) +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "twoways",
+      index = "state",
+      model = "within"
+    ) %>% 
+  lmtest::coeftest(vcovHC(., method = "white1", type = "HC0", cluster = "group"))  
+}
+
+table_3_models
+```
+
+```
+
