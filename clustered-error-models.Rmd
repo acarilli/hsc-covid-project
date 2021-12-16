@@ -1,5 +1,5 @@
 ---
-title: "Models with Clustered "
+title: "Models with Clustered Errors"
 author: "Tony Carilli"
 date: '`r format(lubridate::today(), "%B %d, %Y")`'
 output: pdf_document
