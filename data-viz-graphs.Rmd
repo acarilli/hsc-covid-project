@@ -127,7 +127,7 @@ df %>%
 ```
 
 ```{r message=FALSE}
-plot_a | plot_b 
+(plot_a | plot_b ) / 
 plot_c
 ```
 
