@@ -1,11 +1,12 @@
 ---
-output: pdf
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, comment = NA,
                       options(digits = 3, scipen = 999))
 library(tidyverse)
+library(patchwork)
 ```
 
 ```{r}
@@ -19,7 +20,7 @@ df <-
             cases = median(cases_new, na.rm = TRUE))
 ```
 
-```{r message=FALSE}
+```{r message=FALSE, eval = FALSE}
 library(patchwork)
 (df %>% 
   ggplot() + 
@@ -50,7 +51,7 @@ df %>%
   # scale_y_continuous(sec.axis = sec_axis(~ -2.9 * ., name = "cases"))
 ```
 
-```{r}
+```{r eval=FALSE}
 df %>% 
   group_by(state) %>% 
   # summarize(stringency = mean(stringency_index_lag, na.rm = TRUE)) %>% 
@@ -75,10 +76,11 @@ df %>%
 ```
 
 ```{r plot-a}
+plot_a <- 
 df %>% 
   ggplot() + 
   aes(x = state_level_index, y = cases, label = state) + 
-  geom_point() + 
+  geom_point(size = .5) + 
   geom_smooth(method = "lm") + 
   ggrepel::geom_text_repel(size = 2, alpha = .5) +
   theme_classic() + 
@@ -86,17 +88,19 @@ df %>%
 ```
 
 ```{r plot-b}
+plot_b <- 
 df %>% 
   ggplot() + 
   aes(x = stringency, y = cases, label = state) + 
-  geom_point() + 
+  geom_point(size = .5) + 
   geom_smooth(method = "lm") + 
   ggrepel::geom_text_repel(size = 2, alpha = .5) +
   theme_classic() + 
-  labs(x = "Median Stringency", y = "Median Daily New Cases")
+  labs(x = "Median Stringency", y = NULL)
 ```
 
 ```{r plot-c}
+plot_c <- 
 df %>% 
   group_by(state) %>% 
   ggplot() + 
@@ -112,5 +116,10 @@ df %>%
         legend.title = element_blank()) +
   ggtitle("Median Daily New Cases")
   
+```
+
+```{r}
+plot_a | plot_b 
+plot_c
 ```
 
