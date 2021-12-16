@@ -2,7 +2,7 @@
 output: pdf_document
 ---
 
-```{r setup-table-3, include=FALSE}
+```{r setup-table-5, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, comment = NA,
                       options(digits = 3, scipen = 999))
 library(tidyverse)
