@@ -100,7 +100,7 @@ df %>%
 ```
 
 ```{r plot-c}
-# plot_c <- 
+plot_c <-
 df %>% 
   group_by(state) %>% 
   ggplot() + 
