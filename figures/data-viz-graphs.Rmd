@@ -1,9 +1,11 @@
 ---
-output: pdf_document
+output: 
+  pdf_document:
+    fig_caption: yes
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, comment = NA,
+knitr::opts_chunk$set(echo = TRUE, comment = NA, fig.lp = '',
                       options(digits = 3, scipen = 999))
 library(tidyverse)
 library(patchwork)
@@ -114,7 +116,6 @@ df %>%
   theme(legend.position = c(0.25,.10), 
         legend.direction = "horizontal", 
         legend.title = element_blank()) +
-  ggtitle("Median Daily New Cases per Million") +
   annotate(geom = "text", x = -1.65, y = 55, label = "Median Level of Stringency") +
   annotate(geom = "segment", x = -1.5, y = 53.5, xend = -1.6, yend = 48,
            arrow = arrow(length = unit(2, "mm"))) + 
@@ -126,8 +127,12 @@ df %>%
            arrow = arrow(length = unit(2, "mm")))
 ```
 
-```{r message=FALSE, echo=FALSE}
-(plot_a | plot_b )  
+```{r message=FALSE, echo=FALSE, fig.cap="Cases vs. Social Capital and Stringency"}
+(plot_a | plot_b )
+```
+
+
+```{r message=FALSE, echo=FALSE, fig.cap="Median Daily New Cases per Million"}
 plot_c
 ```
 
