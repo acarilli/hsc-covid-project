@@ -3,14 +3,12 @@ title: "Covid Alone"
 subtitle: The Complementarity between Social Capital and Formal Public Health Rules
   in the United States
 output:
-  word_document: default
-  html_document: default
   pdf_document: default
 bibliography: covid-references.bib
 abstract: The spread of COVID-19 provides a unique opportunity to explore the interactive effect between formal and informal rules. While economists and public health scholars realize the independent effects social capital and stringent public health rules have on prevalence and mortality rates, we advance this literature with a novel framework to analyze the interaction between the two. With state-level data on daily COVID-19 cases, a measure of policy stringency, and various measures of social capital, we find that prevalence rates fall by a larger amount in states where people place a higher value on COVID-19 prevention, where public health measures are more stringent, and where there are higher levels of social capital. We estimate that states with higher values for prevention and higher social capital experienced 81 fewer new daily COVID-19 cases per million. The main results are robust to the inclusion of relevant controls, various specifications, and alternative measures of social capital. These results suggest that individuals and the communities they enter into and exit out of play an important role in the spread and prevention of infectious diseases independent of formal, governmental public health responses.
 ---
 
-```{r setup, include=FALSE}
+```{r setup-main, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 library(plm)
@@ -126,57 +124,15 @@ The data for our empirical analysis comes from a number of sources. Our dependen
 Our sample of state-level data supports the following characterization. The mean household income was \$56,031; the median percent of people with a B.A. degree was 29%; the median percent of people who reported they were in poor or fair health was about 16%; the median percent of Black or African American people was about 7%; a mean population density of about 407 people per square mile; and a mean rural population of about 26%. Table 2 presents standard descriptive statistics for our sample of state-level data.
 
 ```{r child='tables/table-2.Rmd'}
-
-```
-
-
-```{r table-2, results='asis', eval=FALSE}
-df %>%
-  select(
-    cases_new,
-    stringency_index_lag,
-    state_level_index,
-    percent_adults_with_ba,
-    percent_in_fair_or_poor_health,
-    percent_black,
-    percent_rural,
-    percent_65,
-    average_temperature,
-    median_household_income,
-    density
-  ) %>%
-  as.data.frame() %>%
-  stargazer(
-    type = "latex",
-    summary.stat = c("n",
-                     "min",
-                     "max",
-                     "mean",
-                     "median",
-                     "sd"),
-    digits = 2,
-    covariate.labels = c(
-      "New Cases",
-      "$\\mathrm{Stringency_{t-7}}$",
-      "State Level Index",
-      "\\% Bachelor's",
-      "\\% Fair/Poor Health",
-      "\\% Black",
-      "\\% Rural",
-      "\\% > 65",
-      "Average Temperature",
-      "Median Income",
-      "Population Density"
-    ),
-    title = "Descriptive Statistics",
-    header = FALSE,
-    no.space = TRUE
-  )
 ```
 
 Table 3 presents results for the basic model and subsequent specifications for our balanced panel of daily data from March 1, 2020 to April 4, 2021 across fifty states and the District of Columbia. Column 1 estimates equation 1 using a within model that includes period fixed effects; column 2 includes relevant control variables; and column 3 includes both cross-sectional and period fixed effects to account for cross-sectional differences between states. For all models we report clustered standard errors.
 
-```{r table-3, results='asis', eval=FALSE}
+```{r child='tables/table-3.Rmd'}
+```
+
+
+```{r table-3-main, results='asis', eval=FALSE}
 stargazer(
   df %>%
     plm(
