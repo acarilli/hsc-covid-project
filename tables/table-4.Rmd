@@ -1,0 +1,102 @@
+---
+output: pdf_document
+---
+
+```{r setup-table-4, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, comment = NA,
+                      options(digits = 3, scipen = 999))
+library(tidyverse)
+library(plm)
+library(stargazer)
+```
+
+```{r data, include=FALSE}
+df <- # data
+  here::here("data", "covid_data_final.csv") %>% 
+  read_csv(show_col_types = "FALSE") %>% 
+  filter(date >= "2020-03-01")
+
+sc_names <-
+  df %>%
+  names() 
+
+soc_cap_measures <- sc_names[c(14:17, 46:53)]
+```
+
+```{r table-4, results='asis', eval=TRUE}
+df %>%
+  plm::plm(
+    cases_new ~ stringency_index_lag * state_level_index +
+      I(stringency_index_lag ^ 2),
+    data = .,
+    effect = "twoways",
+    index = "state",
+    method = "within"
+  ) %>%
+  broom::tidy() %>%
+  pull(estimate) ->
+  coefs
+
+
+sc_index <- c(-2, -1, 0, 1, 2)
+stringency_index <-
+  df %>%
+  summarize(quant = quantile(stringency_index_lag, na.rm = TRUE)) %>%
+  # filter(between(quant, 1, 87)) %>%
+  filter(quant > 1 & quant < 87) %>%
+  pull(quant)
+
+new <- tibble()
+
+for (i in seq_along(sc_index)) {
+  for (j in seq_along(stringency_index)) {
+    new[i, j] <- coefs[1] * stringency_index[j] +
+      coefs[2] * stringency_index[j] ^ 2 +
+      coefs[3] * stringency_index[j] * sc_index[i]
+  }
+}
+
+
+flextable::set_flextable_defaults(text.align = "left", fonts_ignore = TRUE)
+
+new %>%
+  select(q1 = "...1",
+         q2 = "...2",
+         q3 = "...3") %>%
+  mutate(sc_index = sc_index) %>%
+  relocate(sc_index) %>%
+  arrange(desc(sc_index)) %>%
+  pivot_longer(-sc_index) %>%
+  pivot_wider(values_from = value,
+              names_from = sc_index) %>%
+  # select(1 , 3:7) %>%
+  arrange(desc(name)) %>%
+  mutate(name = c("High",
+                  "Average",
+                  "Low"))  %>%
+  rename(
+    "Desire for Prevention" = name,
+    "Strong" = `2`,
+    "Positive" = `1`,
+    "Average" = `0`,
+    "Negative" = `-1`,
+    "Weak" = `-2`
+  ) %>%
+  mutate(across(Strong:Weak, ~ round(.x + 128.6353))) %>% 
+  flextable::flextable() %>%
+  flextable::add_header_row(values = c("", "Level of Social Capital"),
+                            colwidths = c(2, 4)) %>%
+  flextable::align_text_col(align = "center", header = FALSE) %>%
+  flextable::set_caption("The Interaction between Social Capital and Values 
+                         for Disease Prevention - Estimated Values (cases per million)") %>%
+  flextable::bold(i = c(1, 3), j = c(2, 6)) %>%
+  flextable::hline_top(part = "header") %>%
+  flextable::add_footer_lines(
+    values = c(
+      "Strong and Weak Social Capital are 2 standard deviations above and below the mean level.",
+      "High, Average, and Low Desire for Prevention are measured at the first, second, and third quartiles of the Stringency Index."
+    )
+  ) %>%
+  flextable::fontsize(size = 9, part = "footer") 
+
+```
