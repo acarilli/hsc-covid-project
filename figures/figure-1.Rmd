@@ -2,6 +2,7 @@
 output: 
   pdf_document:
     fig_caption: yes
+    fig_height: 3.5
 ---
 
 ```{r setup, include=FALSE}
@@ -30,7 +31,7 @@ df %>%
   aes(x = state_level_index, y = cases, label = state) + 
   geom_point(size = .5) + 
   geom_smooth(method = "lm") + 
-  ggrepel::geom_text_repel(size = 3, alpha = .5) +
+  ggrepel::geom_text_repel(size = 2.5, alpha = .5) +
   theme_classic() + 
   labs(y = "Median Daily New Cases per Million", x = "Social Capital")
 ```
@@ -42,7 +43,7 @@ df %>%
   aes(x = stringency, y = cases, label = state) + 
   geom_point(size = .5) + 
   geom_smooth(method = "lm") + 
-  ggrepel::geom_text_repel(size = 3, alpha = .5) +
+  ggrepel::geom_text_repel(size = 2.5, alpha = .5) +
   theme_classic() + 
   labs(x = "Median Lagged Stringency", y = NULL)
 ```
