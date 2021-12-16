@@ -115,7 +115,7 @@ df %>%
         legend.direction = "horizontal", 
         legend.title = element_blank()) +
   ggtitle("Median Daily New Cases per Million") +
-  annotate(geom = "text", x = -1.70, y = 55, label = "Median Level of Stringency") +
+  annotate(geom = "text", x = -1.65, y = 55, label = "Median Level of Stringency") +
   annotate(geom = "segment", x = -1.5, y = 53.5, xend = -1.6, yend = 48,
            arrow = arrow(length = unit(2, "mm"))) + 
   theme(axis.ticks = element_blank(),
