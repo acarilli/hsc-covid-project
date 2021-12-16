@@ -1,0 +1,70 @@
+---
+output: pdf_document
+---
+
+```{r setup-table-6, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, comment = NA,
+                      options(digits = 3, scipen = 999))
+library(tidyverse)
+library(plm)
+library(stargazer)
+```
+
+```{r data, include=FALSE}
+df <- # data
+  here::here("data", "covid_data_final.csv") %>% 
+  read_csv(show_col_types = "FALSE") %>% 
+  filter(date >= "2020-03-01")
+
+sc_names <-
+  df %>%
+  names() 
+
+soc_cap_measures <- sc_names[c(14:17, 46:53)]
+```
+
+```{r table-6, results='asis'}
+table_3_models <- list()
+
+for (i in 1:4) {
+  # for(i in 1:1)  {
+  # sc_i <- soc_cap_measures[i]
+  
+  table_3_models[[i]] <-
+    df %>%
+    plm(
+      cases_new ~ stringency_index_lag * get(soc_cap_measures[i]) +
+        I(stringency_index_lag ^ 2),
+      data = .,
+      effect = "twoways",
+      index = "state",
+      model = "within"
+    ) %>% 
+  lmtest::coeftest(vcovHC(., method = "white1", type = "HC0", cluster = "group"))  
+}
+
+names(table_3_models) <- soc_cap_measures[1:4]
+
+stargazer(
+  table_3_models,
+  type = "latex",
+  model.names = FALSE,
+  df = FALSE,
+  covariate.labels = c(
+    "$\\mathrm{Stringency_{t-7}}$",
+    "$\\mathrm{Stringency}_{t-7}^2$",
+    "$\\mathrm{Stringency_{t-7}}$ * Social K"
+  ),
+  title = "Alternative Measures of Social Capital Regression Results",
+  dep.var.labels = "Daily New Cases per Million",
+  header = FALSE,
+  column.labels = c(
+    "Penn State",
+    "Putnam",
+    "Alesina La Ferrara",
+    "Family Prosperity"
+  )
+)
+
+```
+
