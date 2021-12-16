@@ -125,7 +125,12 @@ The data for our empirical analysis comes from a number of sources. Our dependen
 
 Our sample of state-level data supports the following characterization. The mean household income was \$56,031; the median percent of people with a B.A. degree was 29%; the median percent of people who reported they were in poor or fair health was about 16%; the median percent of Black or African American people was about 7%; a mean population density of about 407 people per square mile; and a mean rural population of about 26%. Table 2 presents standard descriptive statistics for our sample of state-level data.
 
-```{r table-2, results='asis', eval=TRUE}
+```{r child='tables/table-2.Rmd'}
+
+```
+
+
+```{r table-2, results='asis', eval=FALSE}
 df %>%
   select(
     cases_new,
@@ -171,7 +176,7 @@ df %>%
 
 Table 3 presents results for the basic model and subsequent specifications for our balanced panel of daily data from March 1, 2020 to April 4, 2021 across fifty states and the District of Columbia. Column 1 estimates equation 1 using a within model that includes period fixed effects; column 2 includes relevant control variables; and column 3 includes both cross-sectional and period fixed effects to account for cross-sectional differences between states. For all models we report clustered standard errors.
 
-```{r table-3, results='asis', eval=TRUE}
+```{r table-3, results='asis', eval=FALSE}
 stargazer(
   df %>%
     plm(
@@ -278,7 +283,7 @@ The sign, magnitude, and statistical significance of our main variables of inter
 
 To interpret the meaning of our results---consistent with Table 1---Table 4 shows the change in daily, new cases using specification 3 of Table 3 across different levels of social capital and the desire for prevention relative to the typical values of each. We measure high and low prevention at the first, second, and third quartiles, and we measure strong and weak social capital at two standard deviations above and below the mean. The whole numbers in Table 4 represent deviations away from the typical desire for prevention and the typical level of social capital; and the typical state shows no change in daily, new cases.
 
-```{r table-4, results='asis', eval=TRUE}
+```{r table-4, results='asis', eval=FALSE}
 df %>%
   plm::plm(
     cases_new ~ stringency_index_lag * state_level_index +
@@ -364,7 +369,7 @@ We use specification 3 (over specification 2) to directly show the interdependen
 
 To see whether particular components of social capital are more or less relevant, Table 5 presents the same specification found in column 3 of Table 3 but accounting for the measured components of social capital. These components include family unity, family interaction, social support, community health, institutional health, collective efficacy, and philanthropic health. Stringency remains negative and statistically significant. All subcomponents except philanthropic health are statistically significant; all of these are significant at 1%, but collective efficacy is significant at 5%. The interaction between stringency and family unity, social support, community health, and collective efficacy are negative, which suggests the interaction decreases the spread of COVID-19. The interaction between stringency and family interaction and institutional health are positive, which suggests the interaction increases the spread of COVID-19.
 
-```{r table-5, results='asis', eval=TRUE}
+```{r table-5, results='asis', eval=FALSE}
 stargazer(
   # df %>%
   #   plm(
@@ -412,7 +417,7 @@ stargazer(
 
 Table 6 re-estimates specification 3 of Table 3 with alternative measures of social capital from the existing literature. These measures include: the SCP version of Penn State Index (2014), the Putnam Index (2000), the Alesina & La Ferrara social capital group (2000), and the Family Prosperity index reported in columns 2, 3, 4, respectively. All of these measures were taken from the JEC Social Capital Project. Our main results are consistent in sign and statistical significance across these measures of social capital.
 
-```{r table-6, results='asis', eval=TRUE}
+```{r table-6, results='asis', eval=FALSE}
 table_3_models <- list()
 
 for (i in 1:4) {
