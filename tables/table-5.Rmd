@@ -10,7 +10,7 @@ library(plm)
 library(stargazer)
 ```
 
-```{r data, include=FALSE}
+```{r data-5, include=FALSE}
 df <- # data
   here::here("data", "covid_data_final.csv") %>% 
   read_csv(show_col_types = "FALSE") %>% 
