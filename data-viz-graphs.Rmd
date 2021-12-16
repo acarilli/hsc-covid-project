@@ -1,13 +1,5 @@
 ---
-title: ""
-author: "Tony Carilli"
-date: '`r format(lubridate::today(), "%B %d, %Y")`'
-output: 
-  html_document:
-    toc: true
-    toc_float: true
-    df_print: paged
-    code_folding: hide
+output: pdf
 ---
 
 ```{r setup, include=FALSE}
@@ -19,46 +11,40 @@ library(tidyverse)
 ```{r}
 df <- 
   here::here("data", "covid_data_final.csv") %>% 
-  read_csv() %>% 
-  filter(date >= "2020-03-01")
+  read_csv(show_col_types = FALSE) %>% 
+  filter(date >= "2020-03-01") %>% 
+  group_by(state) %>% 
+  summarize(stringency = median(stringency_index_lag, na.rm = TRUE),
+            state_level_index = state_level_index[date == "2021-04-04"],
+            cases = median(cases_new, na.rm = TRUE))
 ```
 
 ```{r message=FALSE}
 library(patchwork)
 (df %>% 
-  group_by(state) %>% 
-  summarize(stringency = median(stringency_index_lag, na.rm = TRUE),
-            state_level_index = state_level_index[date == "2021-04-04"],
-            cases = median(cases_new, na.rm = TRUE)) %>% 
   ggplot() + 
-  aes(x = state_level_index, y = cases) + 
+  aes(x = state_level_index, y = cases, label = state) + 
   geom_point() + 
-  geom_smooth(method = "lm") | 
+  geom_smooth(method = "lm") + 
+  ggrepel::geom_text_repel(size = 2, alpha = .5) | 
   # scale_x_reverse() +
 
 df %>% 
-  group_by(state) %>% 
-  summarize(stringency = median(stringency_index_lag, na.rm = TRUE),
-            state_level_index = state_level_index[date == "2021-04-04"],
-            cases = median(cases_new, na.rm = TRUE)) %>% 
   ggplot() + 
-  aes(x = stringency, y = cases) + 
+  aes(x = stringency, y = cases, label = state) + 
   geom_point() + 
-  geom_smooth(method = "lm"))  /
+  geom_smooth(method = "lm") + 
+  ggrepel::geom_text_repel(size = 2, alpha = .5)) /
   # scale_x_reverse())   
 
 df %>% 
   group_by(state) %>% 
-  summarize(stringency = median(stringency_index_lag, na.rm = TRUE),
-            state_level_index = state_level_index[date == "2021-04-04"],
-            # cases = cases_confirmed_pc[date == "2021-04-04"]
-            cases = median(cases_new, na.rm = TRUE)) %>% 
-  # filter(state_level_index < -.5 | state_level_index > .5) %>%
   ggplot() + 
-  aes(x = state_level_index, y = stringency, size = cases, color = cases) %>% 
+  aes(x = state_level_index, y = stringency, alpha = cases, size = cases, label = state) %>% 
   geom_point() +
   geom_vline(xintercept = 0, color = "red", size = 1.25, alpha = .5) +
-  geom_hline(yintercept = 47.4, color = "blue", size = 1.25, alpha = .5)  
+  geom_hline(yintercept = 47.4, color = "blue", size = 1.25, alpha = .5) +
+  ggrepel::geom_text_repel(aes(x = state_level_index, y = stringency, label = state), size = 2, alpha = .5)
   # scale_x_reverse()
   # geom_smooth(aes(x = state_level_index, y = cases/2.9), method = "lm", se = FALSE) +
   # scale_y_continuous(sec.axis = sec_axis(~ -2.9 * ., name = "cases"))
@@ -74,11 +60,6 @@ df %>%
 
 ```{r}
 df %>% 
-  group_by(state) %>% 
-  summarize(stringency = median(stringency_index_lag, na.rm = TRUE),
-            state_level_index = state_level_index[date == "2021-04-04"],
-            # cases = cases_confirmed_pc[date == "2021-04-04"]
-            cases = median(cases_new, na.rm = TRUE)) %>% 
   mutate(cases = log(cases)) %>% 
   # filter(state_level_index < -.5 | state_level_index > .5) %>%
   ggplot() + 
@@ -88,21 +69,48 @@ df %>%
   # geom_hline(yintercept = 47.4, color = "blue", size = 1.25, alpha = .5) + 
   # scale_x_reverse() + 
   # geom_smooth(method = "lm") +
-  geom_text() + 
+  ggrepel::geom_text_repel(size = 3) + 
   theme_classic() + 
   labs(x = "Social Capital", y = "log(New Cases per Million)")
 ```
 
-```{r}
-df %>%
-  filter(cases_confirmed > 0) %>% 
-    plm(
-      log(cases_confirmed) ~  state_level_index,
-      data = .,
-      effect = "time",
-      index = "state",
-      model = "within"
-    ) %>% 
-  lmtest::coeftest(vcovHC(., method = "white1", type = "HC0", cluster = "group"))
+```{r plot-a}
+df %>% 
+  ggplot() + 
+  aes(x = state_level_index, y = cases, label = state) + 
+  geom_point() + 
+  geom_smooth(method = "lm") + 
+  ggrepel::geom_text_repel(size = 2, alpha = .5) +
+  theme_classic() + 
+  labs(y = "Median Daily New Cases", x = "Social Capital")
+```
+
+```{r plot-b}
+df %>% 
+  ggplot() + 
+  aes(x = stringency, y = cases, label = state) + 
+  geom_point() + 
+  geom_smooth(method = "lm") + 
+  ggrepel::geom_text_repel(size = 2, alpha = .5) +
+  theme_classic() + 
+  labs(x = "Median Stringency", y = "Median Daily New Cases")
+```
+
+```{r plot-c}
+df %>% 
+  group_by(state) %>% 
+  ggplot() + 
+  aes(x = state_level_index, y = stringency, alpha = cases, size = cases, label = state) + 
+  geom_vline(xintercept = 0, size = 1, alpha = .5) +
+  geom_hline(yintercept = 47.4, size = 1, alpha = .5) +
+  geom_point() +
+  ggrepel::geom_text_repel(aes(x = state_level_index, y = stringency, label = state), size = 2, alpha = .5) + 
+  labs(x = "Social Capital", y = "Median Stringency")  +
+  theme_classic() +
+  theme(legend.position = c(0.25,.10), 
+        legend.direction = "horizontal", 
+        legend.title = element_blank()) +
+  ggtitle("Median Daily New Cases")
+  
 ```
 
