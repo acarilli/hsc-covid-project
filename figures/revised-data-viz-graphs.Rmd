@@ -1,0 +1,82 @@
+---
+output: 
+  pdf_document:
+    fig_caption: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA, fig.lp = '',
+                      options(digits = 3, scipen = 999))
+library(tidyverse)
+library(patchwork)
+```
+
+```{r include=FALSE}
+df <- 
+  here::here("data", "covid_data_final.csv") %>% 
+  read_csv(show_col_types = FALSE) %>% 
+  filter(date >= "2020-03-01") %>% 
+  group_by(state) %>% 
+  summarize(stringency = median(stringency_index_lag, na.rm = TRUE),
+            state_level_index = state_level_index[date == "2021-04-04"],
+            cases = median(cases_new, na.rm = TRUE))
+```
+
+```{r plot-a, include=FALSE}
+plot_a <- 
+df %>% 
+  ggplot() + 
+  aes(x = state_level_index, y = cases, label = state) + 
+  geom_point(size = .5) + 
+  geom_smooth(method = "lm") + 
+  ggrepel::geom_text_repel(size = 3, alpha = .5) +
+  theme_classic() + 
+  labs(y = "Median Daily New Cases per Million", x = "Social Capital")
+```
+
+```{r plot-b, include=FALSE}
+plot_b <- 
+df %>% 
+  ggplot() + 
+  aes(x = stringency, y = cases, label = state) + 
+  geom_point(size = .5) + 
+  geom_smooth(method = "lm") + 
+  ggrepel::geom_text_repel(size = 3, alpha = .5) +
+  theme_classic() + 
+  labs(x = "Median Lagged Stringency", y = NULL)
+```
+
+```{r plot-c, include=FALSE}
+plot_c <-
+df %>% 
+  ggplot() + 
+  aes(x = state_level_index, y = stringency, alpha = cases, size = cases, label = state) + 
+  geom_vline(xintercept = 0, size = 1, alpha = .1, linetype = "dashed") +
+  geom_hline(yintercept = median(df$stringency), size = 1, alpha = .1, linetype = "dashed") +
+  geom_point() +
+  ggrepel::geom_text_repel(aes(x = state_level_index, y = stringency, label = state), size = 2.5, alpha = .5) + 
+  labs(x = "Social Capital", y = "Stringency")  +
+  theme_classic() +
+  theme(legend.position = c(0.25,.10), 
+        legend.direction = "horizontal", 
+        legend.text.align = 1,
+        legend.title = element_blank()) +
+  annotate(geom = "text", x = -1.54, y = 21.5, label = "Count per Million") +
+  theme(axis.ticks = element_blank()) +
+  #       axis.text = element_blank()) +
+  scale_x_continuous(breaks = c(-2, 0 , 2),
+    labels = c("low", "median", "high")) + 
+  scale_y_continuous(breaks = c(15, median(df$stringency), 75),
+                     labels =  c("low", "median", "high")) +
+  theme(axis.text.y = element_text(angle = 90, hjust = .5))
+```
+
+```{r message=FALSE, echo=FALSE, fig.cap="Cases vs. Social Capital and Stringency"}
+(plot_a | plot_b )
+```
+
+
+```{r message=FALSE, echo=FALSE, fig.cap="Median Daily New Cases per Million"}
+plot_c
+```
+
