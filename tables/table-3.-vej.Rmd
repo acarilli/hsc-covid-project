@@ -1,5 +1,5 @@
 ---
-output: pdf_document
+output: word_document
 ---
 
 ```{r setup-table-3, include=FALSE}
@@ -12,10 +12,13 @@ library(stargazer)
 
 ```{r data-3, include=FALSE}
 
+`%nin%` = Negate(`%in%`)
+
 df <- # data
   here::here("data", "covid_data_final.csv") %>% 
   read_csv(show_col_types = "FALSE") %>% 
-  filter(date >= "2020-03-01") 
+  filter(date >= "2020-03-01") %>% 
+  filter(state %nin% c("AK", "HI"))
 
 sc_names <-
   df %>%
@@ -24,7 +27,7 @@ sc_names <-
 soc_cap_measures <- sc_names[c(14:17, 46:53)]
 ```
 
-```{r table-3, results='asis'}
+```{r table-3}
 stargazer(
 df %>%
     plm(
@@ -68,29 +71,29 @@ df %>%
     ) %>% 
   lmtest::coeftest(vcovHC(., method = "white1", type = "HC0", cluster = "group")),
 
-type = "latex",
+type = "text",
   df = FALSE,
   covariate.labels = c(
-    "$\\mathrm{Stringency_{t-7}}$",
+    "Stringency{t-7}",
     "Social K",
-    "$\\mathrm{Stringency}_{t-7}^2$",
+    "{Stringency}{t-7}2",
     "Median Income",
-    "\\% Bachelor's",
-    "\\% Fair/Poor Health",
-    "\\% Black",
+    "% Bachelor's",
+    "% Fair/Poor Health",
+    "% Black",
     "Population Density",
-    "\\% Rural",
-    "\\% > 65",
+    "% Rural",
+    "% > 65",
     "Average Temperature",
     "Republican Governor",
-    "$\\mathrm{Stringency_{t-7}}$ * Social K"
+    "Stringency{t-7} * Social K"
   ),
   title = "Fixed Effects Regression Results",
   dep.var.labels = "Daily New Cases per Million",
   column.labels = c(
-    "$\\mathrm{FE_{t}}$",
-    "$\\mathrm{FE_{i,t}}$",
-    "$\\mathrm{FE_t}$"
+    "{FE{t}}",
+    "{FE{i,t}}",
+    "{FEt}"
     # "$\\mathrm{IVFE_t}$"
   ),
   header = FALSE

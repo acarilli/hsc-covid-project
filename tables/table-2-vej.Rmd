@@ -1,0 +1,69 @@
+---
+output: word_document
+---
+
+```{r setup-table-2, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, comment = NA,
+                      options(digits = 3, scipen = 999))
+library(tidyverse)
+library(plm)
+library(stargazer)
+```
+
+```{r data-2, include=FALSE}
+df <- # data
+  here::here("data", "covid_data_final.csv") %>% 
+  read_csv(show_col_types = "FALSE") %>% 
+  filter(date >= "2020-03-01")
+
+sc_names <-
+  df %>%
+  names() 
+
+soc_cap_measures <- sc_names[c(14:17, 46:53)]
+```
+
+```{r table-2, results='asis'}
+df %>%
+  select(
+    cases_new,
+    stringency_index_lag,
+    state_level_index,
+    percent_adults_with_ba,
+    percent_in_fair_or_poor_health,
+    percent_black,
+    percent_rural,
+    percent_65,
+    average_temperature,
+    median_household_income,
+    density
+  ) %>%
+  as.data.frame() %>%
+  stargazer(
+    type = "latex",
+    summary.stat = c("n",
+                     "min",
+                     "max",
+                     "mean",
+                     "median",
+                     "sd"),
+    digits = 2,
+    covariate.labels = c(
+      "New Cases",
+      "$\\mathrm{Stringency_{t-7}}$",
+      "State Level Index",
+      "\\% Bachelor's",
+      "\\% Fair/Poor Health",
+      "\\% Black",
+      "\\% Rural",
+      "\\% > 65",
+      "Average Temperature",
+      "Median Income",
+      "Population Density"
+    ),
+    title = "Descriptive Statistics",
+    header = FALSE,
+    no.space = TRUE
+  )
+```
+
