@@ -51,7 +51,7 @@ df %>%
     covariate.labels = c(
       "New Cases",
       "$\\mathrm{Stringency_{t-7}}$",
-      "State Level Index",
+      "Social Capital",
       "\\% Bachelor's",
       "\\% Fair/Poor Health",
       "\\% Black",
@@ -65,5 +65,11 @@ df %>%
     header = FALSE,
     no.space = TRUE
   )
+```
+
+```{r}
+df %>% 
+  filter(is.na(average_temperature)) %>% 
+  select(state, average_temperature)
 ```
 
