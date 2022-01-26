@@ -3,14 +3,16 @@ title: "Covid Alone"
 subtitle: The Complementarity between Social Capital and Formal Public Health Rules
   in the United States
 output:
-  pdf_document:
-    fig_height: 3.5
+  word_document:
+    reference_docx: "word-styles-reference-vej.docx"
+    fig_height: 4.25
+    fig_width: 6
 bibliography: covid-references.bib
 abstract: The spread of COVID-19 provides a unique opportunity to explore the interactive effect between formal and informal rules. While economists and public health scholars realize the independent effects social capital and stringent public health rules have on prevalence and mortality rates, we advance this literature with a novel framework to analyze the interaction between the two. With state-level data on daily COVID-19 cases, a measure of policy stringency, and various measures of social capital, we find that prevalence rates fall by a larger amount in states where people place a higher value on COVID-19 prevention, where public health measures are more stringent, and where there are higher levels of social capital. We estimate that states with higher values for prevention and higher social capital experienced 81 fewer new daily COVID-19 cases per million. The main results are robust to the inclusion of relevant controls, various specifications, and alternative measures of social capital. These results suggest that individuals and the communities they enter into and exit out of play an important role in the spread and prevention of infectious diseases independent of formal, governmental public health responses.
 ---
 
 ```{r setup-main, include=FALSE}
-knitr::opts_chunk$set(warning = FALSE, eval = TRUE, echo = FALSE)
+knitr::opts_chunk$set(warning = FALSE, eval = FALSE, echo = FALSE)
 library(tidyverse)
 library(plm)
 library(bibtex)
@@ -45,10 +47,10 @@ We advance this literature by developing a novel framework to 1) assess the cond
 
 [^5]: We use a measure of policy stringency to represent the variety of formal public health measures *and* as a proxy for the values people within a state have for COVID-19 prevention.
 
-```{r child='figures/figure-1.Rmd', eval=TRUE}
+```{r child='figures/figure-1.Rmd'}
 ```
 
-```{r child='figures/figure-2.Rmd', eval=TRUE}
+```{r child='figures/figure-2.Rmd'}
 ```
 
 
