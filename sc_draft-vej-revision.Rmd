@@ -1,14 +1,13 @@
 ---
-title: "Covid Alone"
-subtitle: The Complementarity between Social Capital and Formal Public Health Rules
-  in the United States
+title: "Covid Alone: The Complementarity between Social Capital and Formal Public Health Rules
+  in the United States"
 output:
   word_document:
     reference_docx: "word-styles-reference-vej.docx"
     fig_height: 4.25
     fig_width: 6
 bibliography: covid-references.bib
-abstract: The spread of COVID-19 provides a unique opportunity to explore the interactive effect between formal and informal rules. While economists and public health scholars realize the independent effects social capital and stringent public health rules have on prevalence and mortality rates, we advance this literature with a novel framework to analyze the interaction between the two. With state-level data on daily COVID-19 cases, a measure of policy stringency, and various measures of social capital, we find that prevalence rates fall by a larger amount in states where people place a higher value on COVID-19 prevention, where public health measures are more stringent, and where there are higher levels of social capital. We estimate that states with higher values for prevention and higher social capital experienced 81 fewer new daily COVID-19 cases per million. The main results are robust to the inclusion of relevant controls, various specifications, and alternative measures of social capital. These results suggest that individuals and the communities they enter into and exit out of play an important role in the spread and prevention of infectious diseases independent of formal, governmental public health responses.
+abstract: ABSTRACT \newline The spread of COVID-19 provides a unique opportunity to explore the interactive effect between formal and informal rules. While economists and public health scholars realize the independent effects social capital and stringent public health rules have on prevalence and mortality rates, we advance this literature with a novel framework to analyze the interaction between the two. With state-level data on daily COVID-19 cases, a measure of policy stringency, and various measures of social capital, we find that prevalence rates fall by a larger amount in states where people place a higher value on COVID-19 prevention, where public health measures are more stringent, and where there are higher levels of social capital. We estimate that states with higher values for prevention and higher social capital experienced 81 fewer new daily COVID-19 cases per million. The main results are robust to the inclusion of relevant controls, various specifications, and alternative measures of social capital. These results suggest that individuals and the communities they enter into and exit out of play an important role in the spread and prevention of infectious diseases independent of formal, governmental public health responses.
 ---
 
 ```{r setup-main, include=FALSE}
@@ -47,10 +46,10 @@ We advance this literature by developing a novel framework to 1) assess the cond
 
 [^5]: We use a measure of policy stringency to represent the variety of formal public health measures *and* as a proxy for the values people within a state have for COVID-19 prevention.
 
-```{r child='figures/figure-1.Rmd'}
+```{r child='figures/figure-1.Rmd', eval=TRUE}
 ```
 
-```{r child='figures/figure-2.Rmd'}
+```{r child='figures/figure-2.Rmd', eval=TRUE}
 ```
 
 
@@ -185,4 +184,4 @@ While we show the interaction between social capital and the value for preventio
 
 Future research should study the extent to which social capital erodes over time particularly because of formal rules that prevent interactions. That is, while we find social capital supports the values people have for disease prevention, the related formal rules people also use might begin to extinguish the meaningful parts of social capital given a longer duration or additional severity. This is especially once we recognize the cultural context within which social capital emerges, i.e., human interactions and the norms of proper behavior that develop. Formal rules that make such interactions more costly are likely to alter the costs and benefits people face such that existing social capital erodes [@carilli_government_2008] and alternative kinds of social capital will arise. Indeed, if formal rules prevent interactions that would have otherwise taken place, individuals realize less of a benefit from maintaining existing social ties.
 
-References
+# References
