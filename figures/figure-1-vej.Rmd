@@ -10,6 +10,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE, comment = NA, fig.lp = '',
                       options(digits = 3, scipen = 999))
 library(tidyverse)
+library(patchwork)
 ```
 
 ```{r include=FALSE}
@@ -54,39 +55,10 @@ df %>%
 ```
 
 
-```{r plot-c, include=FALSE}
-plot_c <-
-df %>% 
-  ggplot() + 
-  aes(x = state_level_index, y = stringency, alpha = cases, size = cases, label = state) + 
-  geom_vline(xintercept = 0, size = 1, alpha = .1, linetype = "dashed") +
-  geom_hline(yintercept = median(df$stringency), size = 1, alpha = .1, linetype = "dashed") +
-  geom_point() +
-  ggrepel::geom_text_repel(aes(x = state_level_index, y = stringency, label = state, family = "serif"),
-                           size = 2.5, alpha = .5) + 
-  labs(x = "Social Capital", y = "Stringency")  +
-  theme_classic() +
-  theme(legend.position = c(0.25,.10), 
-        legend.direction = "horizontal", 
-        legend.text.align = 1,
-        legend.title = element_blank()) +
-  annotate(geom = "text", x = -1.54, y = 21.5, label = "Count per Million", family = "serif") +
-  theme(axis.ticks = element_blank()) +
-  #       axis.text = element_blank()) +
-  scale_x_continuous(breaks = c(-2, 0 , 2),
-    labels = c("low", "median", "high")) + 
-  scale_y_continuous(breaks = c(15, median(df$stringency), 75),
-                     labels =  c("low", "median", "high")) +
-  theme(axis.text.y = element_text(angle = 90, hjust = .5)) +
-  theme(text = element_text(family = "serif"))
-```
 
-```{r message=FALSE, echo=FALSE, fig.cap="Cases vs. Social Capital and Stringency"}
+```{r message=FALSE, echo=FALSE}
 (plot_a | plot_b )
 ```
 
 
-```{r message=FALSE, echo=FALSE, fig.cap="Median Daily New Cases per Million"}
-plot_c
-```
 
