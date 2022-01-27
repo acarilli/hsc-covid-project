@@ -11,10 +11,13 @@ library(stargazer)
 ```
 
 ```{r data-2, include=FALSE}
+`%nin%` = Negate(`%in%`)
+
 df <- # data
   here::here("data", "covid_data_final.csv") %>% 
   read_csv(show_col_types = "FALSE") %>% 
-  filter(date >= "2020-03-01")
+  filter(date >= "2020-03-01") %>% 
+  filter(state %nin% c("AK", "HI"))
 
 sc_names <-
   df %>%
@@ -49,9 +52,9 @@ df %>%
                      "sd"),
     digits = 2,
     covariate.labels = c(
-      "New Cases",
+      "New Cases per Million",
       "$\\mathrm{Stringency_{t-7}}$",
-      "State Level Index",
+      "Social Capital",
       "\\% Bachelor's",
       "\\% Fair/Poor Health",
       "\\% Black",

@@ -11,10 +11,14 @@ library(stargazer)
 ```
 
 ```{r data-5, include=FALSE}
+
+`%nin%` = Negate(`%in%`)
+
 df <- # data
   here::here("data", "covid_data_final.csv") %>% 
   read_csv(show_col_types = "FALSE") %>% 
-  filter(date >= "2020-03-01")
+  filter(date >= "2020-03-01") %>% 
+  filter(state %nin% c("AK", "HI"))
 
 sc_names <-
   df %>%
