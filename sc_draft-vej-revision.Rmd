@@ -1,5 +1,5 @@
 ---
-title: "Covid Alone: The Complementarity between Social Capital and Formal Public Health Rules
+title: "Covid Alone/: The Complementarity between Social Capital and Formal Public Health Rules
   in the United States"
 output:
   word_document:

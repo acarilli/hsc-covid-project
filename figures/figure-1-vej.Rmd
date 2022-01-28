@@ -56,7 +56,7 @@ df %>%
 
 
 
-```{r message=FALSE, echo=FALSE}
+```{r message=FALSE, echo=FALSE, fig.cap="Cases vs. Social Capital and Stringency"}
 (plot_a | plot_b )
 ```
 
