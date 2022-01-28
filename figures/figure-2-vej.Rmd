@@ -51,7 +51,7 @@ df %>%
   theme(text = element_text(family = "serif"))
 ```
 
-```{r message=FALSE, echo=FALSE}
+```{r message=FALSE, echo=FALSE, fig.cap="Median Daily New Cases per Million}
 plot_c
 ```
 
