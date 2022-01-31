@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ---
 title: 'Covid Alone/: The Complementarity between Social Capital and Formal Public
   Health Rules in the United States'
@@ -357,4 +356,3 @@ While we show the interaction between social capital and the value for preventio
 Future research should study the extent to which social capital erodes over time particularly because of formal rules that prevent interactions. That is, while we find social capital supports the values people have for disease prevention, the related formal rules people also use might begin to extinguish the meaningful parts of social capital given a longer duration or additional severity. This is especially once we recognize the cultural context within which social capital emerges, i.e., human interactions and the norms of proper behavior that develop. Formal rules that make such interactions more costly are likely to alter the costs and benefits people face such that existing social capital erodes [@carilli_government_2008] and alternative kinds of social capital will arise. Indeed, if formal rules prevent interactions that would have otherwise taken place, individuals realize less of a benefit from maintaining existing social ties.
 
 # References
->>>>>>> 0417e1935c032598cbecd0092832e42354767371
