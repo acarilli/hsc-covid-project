@@ -2,7 +2,6 @@
 title: 'Covid Alone: The Complementarity between Social Capital and Formal Public
   Health Rules in the United States'
 output:
-  pdf_document: default
   word_document:
     reference_docx: word-styles-reference-vej.docx
     fig_height: 4.25
