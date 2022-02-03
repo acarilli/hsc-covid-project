@@ -137,6 +137,8 @@ The following statistics describe the median values of our sample data, which co
 
 Table 3 presents the results of our three models using our sample data. Column 1 estimates equation 1---the one-way, period fixed effects model. Column 2 estimates equation 2 that adds relevant control variables to equation 1. Column 3 estimates equation 3 that includes both cross-sectional and period fixed effects to account for cross-sectional differences between states. We report clustered errors for all models.
 
+[Insert table 3]
+
 ```{r child='tables/table-3.Rmd'}
 ```
 
@@ -156,6 +158,8 @@ To interpret the meaning of our results---consistent with Table I---Table IV sho
 
 We measure high and low prevention at the first, second, and third quartiles of the stringency index, and we measure strong and weak social capital at two standard deviations above and below the mean of the social capital index. The whole numbers in Table IV represent deviations away from the typical desire for prevention and the typical level of social capital.
 
+[insert table 4]
+
 ```{r child='tables/table-4.Rmd'}
 ```
 
@@ -163,10 +167,14 @@ Table IV---especially the bold numbers in the four corners---allows us to direct
 
 To see whether particular components of social capital are more or less relevant, Table V presents the same specification found in column 3 of Table III but accounting for the measured components of social capital. These components include family unity, family interaction, social support, community health, institutional health, collective efficacy, and philanthropic health. Stringency remains negative and statistically significant. All components except family interaction, collective efficacy, and philanthropic health are statistically significant at 1%. The interaction between stringency and family unity, social support, community health, and institutional health, respectively, remains negative. The negative sign indicates that these interactions decrease the spread of COVID-19. The interaction between stringency and institutional health is positive, which suggests the interaction increases the spread of COVID-19.
 
+[insert table 5]
+
 ```{r child='tables/table-5.Rmd'}
 ```
 
 To alleviate concerns about whether the Social Capital Project---and its measurement of social capital---biases our results, we analyze specification 3 of Table III with alternative measures of social capital used in the scholarly literature. Table VI shows the results of specification 3 of Table III using the following measures of social capital: the SCP version of Penn State Index (2014), the Putnam Index (2000), the Alesina & La Ferrara social capital group (2000), and the Family Prosperity index reported in columns 1, 2, 3, 4, respectively. All of these measures were taken from the JEC Social Capital Project. Our main results are consistent in sign and statistical significance across these measures of social capital.
+
+[insert table 6]
 
 ```{r child='tables/table-6.Rmd'}
 ```
